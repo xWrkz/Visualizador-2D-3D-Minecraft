@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MC Visualizer MVP</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- View 1: CATALOG -->
+        <div id="view-catalog" class="screen-view active">
+
+            <!-- Catalog Sidebar -->
+            <aside class="sidebar">
+                <div class="logo">
+                    <i class="fa-solid fa-gem"></i> Wrkz Colecciones
+                </div>
+
+                <div class="menu-section">
+                    <h3>Colecciones</h3>
+                    <div id="collection-tabs">
+                        <button class="menu-btn active" data-collection="1">
+                            <i class="fa-solid fa-cube"></i> Mini-Construcciones
+                        </button>
+                        <button class="menu-btn" data-collection="2">
+                            <i class="fa-solid fa-bolt"></i> Mini-Construcciones Alucinantes
+                        </button>
+                        <button class="menu-btn" data-collection="3">
+                            <i class="fa-solid fa-fire"></i> Mini-Construcciones Asombrosas
+                        </button>
+                        <button class="menu-btn" data-collection="4">
+                            <i class="fa-solid fa-star"></i> Mini-Construcciones Increibles
+                        </button>
+                        <button class="menu-btn" data-collection="5">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Mini-Construcciones Mágicas
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Catalog Main -->
+            <main class="main-content">
+                <header class="top-bar">
+                    <h2 id="current-collection-title">Mini-Construcciones</h2>
+                    <div class="user-profile">
+                        <span class="user-tier">Nivel: Maestro</span>
+                        <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" alt="User">
+                    </div>
+                </header>
+
+                <div class="catalog-container">
+                    <div class="cards-grid" id="catalog-grid">
+                        <!-- Cards will be injected by app.js -->
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- View 2: VISUALIZER (Hidden by default) -->
+        <div id="view-visualizer" class="screen-view">
+            <!-- Visualizer Sidebar -->
+            <aside class="sidebar">
+                <div class="logo">
+                    <i class="fa-solid fa-cube"></i> MC Vis
+                </div>
+
+                <button class="menu-btn back-btn" id="btn-back-catalog">
+                    <i class="fa-solid fa-arrow-left"></i> Volver al Catálogo
+                </button>
+
+                <div class="menu-section" style="margin-top: 2rem;">
+                    <h3>Vistas</h3>
+                    <button class="menu-btn active" id="btn-3d">
+                        <i class="fa-solid fa-cube"></i> Visualizador 3D
+                    </button>
+                    <button class="menu-btn" id="btn-2d">
+                        <i class="fa-solid fa-layer-group"></i> Visualizador 2D
+                    </button>
+                </div>
+
+                <div class="menu-section premium-section">
+                    <h3>Descargas (Arquitecto)</h3>
+                    <button class="premium-btn" data-tier="3">
+                        <i class="fa-solid fa-download"></i> Mundo Bedrock
+                    </button>
+                    <button class="premium-btn" data-tier="3">
+                        <i class="fa-solid fa-map"></i> Mapa Java
+                    </button>
+                    <button class="premium-btn" data-tier="3">
+                        <i class="fa-solid fa-cube"></i> Archivo .mcstructure
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Visualizer Main -->
+            <main class="main-content">
+                <header class="top-bar">
+                    <h2 id="visualizer-title">Vista Previa</h2>
+                    <div class="user-profile">
+                        <span class="user-tier">Nivel: Maestro</span>
+                        <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" alt="User">
+                    </div>
+                </header>
+
+                <div class="visualizer-container">
+                    <div id="canvas-3d" class="view-panel active">
+                        <!-- Vertical Pan Slider (Camera) -->
+                        <div class="vertical-slider-container" id="pan-container" style="left: 2rem;">
+                            <label for="pan-slider">Cámara</label>
+                            <input type="range" id="pan-slider" min="0" max="100" value="50" orient="vertical">
+                        </div>
+
+                        <!-- Vertical Slicer Slider (Layers) -->
+                        <div class="vertical-slider-container" id="slice-container" style="right: 2rem; left: auto;">
+                            <label for="slice-slider">Corte</label>
+                            <input type="range" id="slice-slider" min="0" max="100" value="100" orient="vertical">
+                        </div>
+
+                        <!-- Controles de Rotación -->
+                        <div class="visualizer-controls" id="visualizer-controls">
+                            <button id="btn-rotate-left" class="control-btn" title="Rotar a la izquierda"><i
+                                    class="fa-solid fa-rotate-left"></i></button>
+                            <button id="btn-toggle-play" class="control-btn" title="Pausar / Reproducir"><i
+                                    class="fa-solid fa-pause"></i></button>
+                            <button id="btn-rotate-right" class="control-btn" title="Rotar a la derecha"><i
+                                    class="fa-solid fa-rotate-right"></i></button>
+                        </div>
+                    </div>
+
+                    <div id="canvas-2d" class="view-panel"></div>
+
+                    <!-- Block Info Panel -->
+                    <div id="block-info-panel" class="block-info hidden">
+                        <div class="block-icon" id="block-icon-container">
+                            <i class="fa-solid fa-cube"></i>
+                        </div>
+                        <div class="block-details">
+                            <h4 id="block-name">Selecciona un bloque</h4>
+                            <p id="block-coords">X: - Y: - Z: -</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+    </div>
+
+    <!-- Patreon Modal Overlay -->
+    <div class="modal-overlay" id="patreon-modal">
+        <div class="modal-content glass-panel">
+            <button class="close-btn" id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-icon">
+                <i class="fa-brands fa-patreon"></i>
+            </div>
+            <h2>Acceso Restringido</h2>
+            <p id="modal-message">Para acceder a este contenido necesitas mejorar tu nivel en Patreon.</p>
+            <div class="tier-info">
+                <span>Nivel Requerido:</span>
+                <strong id="required-tier-name">Arquitecto ($9/mes)</strong>
+            </div>
+            <a href="https://www.patreon.com" target="_blank" class="patreon-btn">
+                Mejorar en Patreon
+            </a>
+        </div>
+    </div>
+
+    <!-- Three.js from CDN (Non-module version for local testing) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
