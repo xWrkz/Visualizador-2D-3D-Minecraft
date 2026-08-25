@@ -43,8 +43,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const premiumBtns = document.querySelectorAll('.premium-btn');
     const requiredTierName = document.getElementById('required-tier-name');
 
-    // Cambiamos a Nivel 0 (Público) para probar la lógica de bloqueo
-    const currentUserTier = 0;
+    // --- Cookie Parsing for Patreon ---
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+
+    const cookieTier = getCookie('mc_tier');
+    const cookieUser = getCookie('mc_user');
+    
+    const currentUserTier = cookieTier !== null ? parseInt(cookieTier) : 0;
+    const currentUserName = cookieUser ? decodeURIComponent(cookieUser) : null;
+
+    function getTierName(tier) {
+        if (tier === 3) return "Arquitecto";
+        if (tier === 2) return "Maestro";
+        if (tier === 1) return "Básico";
+        return "Público";
+    }
+
+    // --- Renderizar Top Bar ---
+    function renderUserProfile(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        if (currentUserTier > 0) {
+            container.innerHTML = `
+                <span class="user-tier">Nivel: ${getTierName(currentUserTier)}</span>
+                <img src="https://ui-avatars.com/api/?name=${currentUserName || 'User'}&background=6366f1&color=fff" alt="User">
+            `;
+        } else {
+            container.innerHTML = `
+                <a href="/.netlify/functions/patreon-login" class="login-btn" style="background-color: #ff424d; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; text-decoration: none; font-weight: bold; font-size: 0.9rem;">
+                    <i class="fa-brands fa-patreon"></i> Conectar Patreon
+                </a>
+            `;
+        }
+    }
+
+    renderUserProfile('catalog-user-profile');
+    renderUserProfile('visualizer-user-profile');
 
     // --- Patreon Locking Logic ---
     premiumBtns.forEach(btn => {
