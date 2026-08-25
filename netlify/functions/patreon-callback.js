@@ -6,7 +6,10 @@ exports.handler = async (event, context) => {
     const REDIRECT_URI = process.env.PATREON_REDIRECT_URI;
 
     if (!code) {
-        return { statusCode: 400, body: "Error: No se recibió código de autorización de Patreon." };
+        return { 
+            statusCode: 400, 
+            body: `Error: No se recibió código de autorización de Patreon. Parametros recibidos: ${JSON.stringify(event.queryStringParameters)}` 
+        };
     }
 
     try {
