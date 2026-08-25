@@ -312,9 +312,20 @@ function generateInventoryPDF() {
     
     window.currentModelGroup.traverse((child) => {
         if (child.isMesh) {
-            const rawName = child.material.name || child.name || "Bloque Desconocido";
+            const rawName = child.userData.trueMinecraftName || child.material.name || child.name || "Bloque Desconocido";
             const cleanName = rawName.replace(/_/g, ' ').replace(/[0-9]/g, '').trim();
-            const translatedName = typeof translateBlockName === 'function' ? translateBlockName(cleanName) : cleanName;
+            let translatedName = typeof translateBlockName === 'function' ? translateBlockName(cleanName) : cleanName;
+            
+            // Detectar alfombras y losas por su altura
+            const bbox = new THREE.Box3().setFromObject(child);
+            const size = new THREE.Vector3();
+            bbox.getSize(size);
+            
+            if (size.y < 0.2) {
+                translatedName += " (Alfombra)";
+            } else if (size.y > 0.3 && size.y < 0.6) {
+                translatedName += " (Losa)";
+            }
             
             if (!inventory[translatedName]) {
                 inventory[translatedName] = {
@@ -396,7 +407,7 @@ function generateInventoryPDF() {
         }
         
         pdf.text(item.name, margin + 12, y);
-        pdf.text(`${item.count} bloques`, pageWidth - margin, y, { align: 'right' });
+        pdf.text(`${item.count} unidades`, pageWidth - margin, y, { align: 'right' });
         
         pdf.setDrawColor(220);
         pdf.line(margin, y + 4, pageWidth - margin, y + 4);

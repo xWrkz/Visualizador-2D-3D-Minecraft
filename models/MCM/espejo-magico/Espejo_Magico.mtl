@@ -1,54 +1,15 @@
 # Wavefront OBJ material file
-# Contains 13 materials
-
-newmtl grass_block_top
-Ns 0
-Ka 0.2 0.2 0.2
-Kd 1 1 1
-Ks 0 0 0
-map_Ka tex/grass_block_top_y.png
-# for G3D, to make textures look blocky:
-interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/grass_block_top_y.png
-illum 2
-# d 1
-# Tr 0
+# Contains 10 materials
 
 newmtl stone
 Ns 0
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0 0 0
-map_Ka tex/stone.png
+map_Ka stone.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/stone.png
-illum 2
-# d 1
-# Tr 0
-
-newmtl dirt
-Ns 0
-Ka 0.2 0.2 0.2
-Kd 1 1 1
-Ks 0 0 0
-map_Ka tex/dirt.png
-# for G3D, to make textures look blocky:
-interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/dirt.png
-illum 2
-# d 1
-# Tr 0
-
-newmtl grass_block_side
-Ns 0
-Ka 0.2 0.2 0.2
-Kd 1 1 1
-Ks 0 0 0
-map_Ka tex/grass_block_side_y.png
-# for G3D, to make textures look blocky:
-interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/grass_block_side_y.png
+map_Kd stone.png
 illum 2
 # d 1
 # Tr 0
@@ -59,12 +20,12 @@ Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0.03 0.03 0.03
 Ke 0.627989 0.627989 0.627989
-map_Ka tex/nether_portal.png
+map_Ka nether_portal.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/nether_portal.png
-map_d tex/nether_portal.png
-map_Ke tex/nether_portal.png
+map_Kd nether_portal.png
+map_d nether_portal.png
+map_Ke nether_portal.png
 illum 4
 # d 0.8
 # Tr 0.2
@@ -75,10 +36,10 @@ Ns 204
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0.24 0.24 0.24
-map_Ka tex/obsidian.png
+map_Ka obsidian.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/obsidian.png
+map_Kd obsidian.png
 illum 2
 # d 1
 # Tr 0
@@ -88,10 +49,10 @@ Ns 0
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0 0 0
-map_Ka tex/stone_bricks.png
+map_Ka stone_bricks.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/stone_bricks.png
+map_Kd stone_bricks.png
 illum 2
 # d 1
 # Tr 0
@@ -101,10 +62,10 @@ Ns 0
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0 0 0
-map_Ka tex/yellow_wool.png
+map_Ka yellow_wool.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/yellow_wool.png
+map_Kd yellow_wool.png
 illum 2
 # d 1
 # Tr 0
@@ -114,10 +75,10 @@ Ns 0
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0 0 0
-map_Ka tex/purple_wool.png
+map_Ka purple_wool.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/purple_wool.png
+map_Kd purple_wool.png
 illum 2
 # d 1
 # Tr 0
@@ -127,10 +88,10 @@ Ns 204
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0.24 0.24 0.24
-map_Ka tex/quartz_block_bottom.png
+map_Ka quartz_block_bottom.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/quartz_block_bottom.png
+map_Kd quartz_block_bottom.png
 illum 2
 # d 1
 # Tr 0
@@ -140,10 +101,10 @@ Ns 204
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0.24 0.24 0.24
-map_Ka tex/quartz_block_top.png
+map_Ka quartz_block_top.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/quartz_block_top.png
+map_Kd quartz_block_top.png
 illum 2
 # d 1
 # Tr 0
@@ -153,10 +114,10 @@ Ns 127.5
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0.15 0.15 0.15
-map_Ka tex/smooth_stone.png
+map_Ka smooth_stone.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/smooth_stone.png
+map_Kd smooth_stone.png
 illum 2
 # d 1
 # Tr 0
@@ -166,10 +127,10 @@ Ns 127.5
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0.15 0.15 0.15
-map_Ka tex/bamboo_planks.png
+map_Ka bamboo_planks.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/bamboo_planks.png
+map_Kd bamboo_planks.png
 illum 2
 # d 1
 # Tr 0

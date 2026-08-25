@@ -278,9 +278,20 @@ function onMouseMove(event) {
             highlightBox.setFromObject(hoveredMesh);
             highlightBox.visible = true;
 
-            const rawName = hoveredMesh.material.name || hoveredMesh.name || "Bloque";
+            const rawName = hoveredMesh.userData.trueMinecraftName || hoveredMesh.material.name || hoveredMesh.name || "Bloque";
             const cleanName = rawName.replace(/_/g, ' ').replace(/[0-9]/g, '').trim();
-            const translatedName = typeof translateBlockName === 'function' ? translateBlockName(cleanName) : cleanName;
+            let translatedName = typeof translateBlockName === 'function' ? translateBlockName(cleanName) : cleanName;
+
+            // Detectar alfombras y losas por su altura
+            const bbox = new THREE.Box3().setFromObject(hoveredMesh);
+            const size = new THREE.Vector3();
+            bbox.getSize(size);
+            
+            if (size.y < 0.2) {
+                translatedName += " (Alfombra)";
+            } else if (size.y > 0.3 && size.y < 0.6) {
+                translatedName += " (Losa)";
+            }
 
             const iconContainer = document.getElementById('block-icon-container');
             if (hoveredMesh.material.map && hoveredMesh.material.map.image) {
@@ -341,25 +352,55 @@ window.clearModel = function() {
 
 window.loadModel = function(path, objFile, mtlFile) {
     window.clearModel();
-
-    const mtlLoader = new THREE.MTLLoader();
-    mtlLoader.setPath(path);
-    mtlLoader.load(mtlFile, function (materials) {
-        materials.preload();
-
-        for (const materialName in materials.materials) {
-            const mat = materials.materials[materialName];
-            if (mat.map) {
-                mat.map.magFilter = THREE.NearestFilter;
-                mat.map.minFilter = THREE.NearestFilter;
+    
+    // 1. Descargar y leer el archivo .obj como texto para extraer los nombres verdaderos
+    const fullObjPath = path + objFile;
+    fetch(fullObjPath)
+        .then(response => response.text())
+        .then(text => {
+            const blockTypeMap = {};
+            let currentType = null;
+            const lines = text.split('\n');
+            for (let line of lines) {
+                line = line.trim();
+                if (line.startsWith('# type: ')) {
+                    currentType = line.substring(8).trim();
+                } else if (line.startsWith('o ') || line.startsWith('g ')) {
+                    if (currentType) {
+                        const blockName = line.substring(2).trim();
+                        blockTypeMap[blockName] = currentType;
+                        currentType = null;
+                    }
+                }
             }
-            mat.side = THREE.DoubleSide;
-        }
 
-        const objLoader = new THREE.OBJLoader();
-        objLoader.setMaterials(materials);
-        objLoader.setPath(path);
-        objLoader.load(objFile, function (object) {
+            // 2. Continuar con la carga normal 3D
+            const mtlLoader = new THREE.MTLLoader();
+            mtlLoader.setPath(path);
+            mtlLoader.setResourcePath('models/text/'); // Apunta a la carpeta general
+            mtlLoader.load(mtlFile, function (materials) {
+                materials.preload();
+
+                for (const materialName in materials.materials) {
+                    const mat = materials.materials[materialName];
+                    if (mat.map) {
+                        mat.map.magFilter = THREE.NearestFilter;
+                        mat.map.minFilter = THREE.NearestFilter;
+                    }
+                    mat.side = THREE.DoubleSide;
+                }
+
+                const objLoader = new THREE.OBJLoader();
+                objLoader.setMaterials(materials);
+                objLoader.setPath(path);
+                objLoader.load(objFile, function (object) {
+                    
+                    // Asignar el nombre verdadero a cada pieza 3D
+                    object.traverse((child) => {
+                        if (child.isMesh && blockTypeMap[child.name]) {
+                            child.userData.trueMinecraftName = blockTypeMap[child.name];
+                        }
+                    });
             const box = new THREE.Box3().setFromObject(object);
             const center = box.getCenter(new THREE.Vector3());
 
@@ -424,4 +465,7 @@ window.loadModel = function(path, objFile, mtlFile) {
             animate();
         });
     });
+}).catch(error => {
+    console.error("Error Fetch OBJ:", error);
+});
 }

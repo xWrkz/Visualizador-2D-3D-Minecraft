@@ -1,54 +1,15 @@
 # Wavefront OBJ material file
-# Contains 9 materials
-
-newmtl grass_block_top
-Ns 0
-Ka 0.2 0.2 0.2
-Kd 1 1 1
-Ks 0 0 0
-map_Ka tex/grass_block_top_y.png
-# for G3D, to make textures look blocky:
-interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/grass_block_top_y.png
-illum 2
-# d 1
-# Tr 0
-
-newmtl dirt
-Ns 0
-Ka 0.2 0.2 0.2
-Kd 1 1 1
-Ks 0 0 0
-map_Ka tex/dirt.png
-# for G3D, to make textures look blocky:
-interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/dirt.png
-illum 2
-# d 1
-# Tr 0
-
-newmtl grass_block_side
-Ns 0
-Ka 0.2 0.2 0.2
-Kd 1 1 1
-Ks 0 0 0
-map_Ka tex/grass_block_side_y.png
-# for G3D, to make textures look blocky:
-interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/grass_block_side_y.png
-illum 2
-# d 1
-# Tr 0
+# Contains 6 materials
 
 newmtl lime_terracotta
 Ns 0
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0 0 0
-map_Ka tex/lime_terracotta.png
+map_Ka lime_terracotta.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/lime_terracotta.png
+map_Kd lime_terracotta.png
 illum 2
 # d 1
 # Tr 0
@@ -58,10 +19,10 @@ Ns 0
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0 0 0
-map_Ka tex/green_terracotta.png
+map_Ka green_terracotta.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/green_terracotta.png
+map_Kd green_terracotta.png
 illum 2
 # d 1
 # Tr 0
@@ -71,10 +32,10 @@ Ns 0
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0 0 0
-map_Ka tex/white_concrete.png
+map_Ka white_concrete.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/white_concrete.png
+map_Kd white_concrete.png
 illum 2
 # d 1
 # Tr 0
@@ -84,10 +45,10 @@ Ns 0
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0 0 0
-map_Ka tex/gray_concrete.png
+map_Ka gray_concrete.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/gray_concrete.png
+map_Kd gray_concrete.png
 illum 2
 # d 1
 # Tr 0
@@ -97,10 +58,10 @@ Ns 0
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0 0 0
-map_Ka tex/green_concrete.png
+map_Ka green_concrete.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/green_concrete.png
+map_Kd green_concrete.png
 illum 2
 # d 1
 # Tr 0
@@ -110,10 +71,10 @@ Ns 0
 Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0 0 0
-map_Ka tex/green_concrete_powder.png
+map_Ka green_concrete_powder.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd tex/green_concrete_powder.png
+map_Kd green_concrete_powder.png
 illum 2
 # d 1
 # Tr 0
