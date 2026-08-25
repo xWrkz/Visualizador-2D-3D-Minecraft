@@ -43,7 +43,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const premiumBtns = document.querySelectorAll('.premium-btn');
     const requiredTierName = document.getElementById('required-tier-name');
 
-    const currentUserTier = 2; // Simulated User Tier (2: Maestro)
+    // Cambiamos a Nivel 0 (Público) para probar la lógica de bloqueo
+    const currentUserTier = 0;
+
+    // --- Patreon Locking Logic ---
+    premiumBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const requiredTier = parseInt(btn.getAttribute('data-tier') || "3");
+            
+            if (currentUserTier < requiredTier) {
+                requiredTierName.textContent = requiredTier === 3 ? "Arquitecto" : "Maestro";
+                modal.classList.add('active');
+            } else {
+                // In the future: trigger actual download
+                alert("Iniciando descarga del archivo...");
+            }
+        });
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
 
     // --- Catalog Logic ---
     function generateCards(collectionId, collectionName) {
@@ -85,11 +105,17 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             
             card.addEventListener('click', () => {
-                openVisualizer({
-                    title: buildTitle,
-                    collection: collectionName,
-                    data: specificData
-                });
+                // Las construcciones > 1 requieren nivel 2 (Maestro)
+                if (i > 1 && currentUserTier < 2) {
+                    requiredTierName.textContent = "Maestro";
+                    modal.classList.add('active');
+                } else {
+                    openVisualizer({
+                        title: buildTitle,
+                        collection: collectionName,
+                        data: specificData
+                    });
+                }
             });
             
             catalogGrid.appendChild(card);
