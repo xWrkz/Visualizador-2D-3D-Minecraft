@@ -78,9 +78,9 @@ function generateCards(collectionId, collectionName) {
 
     const banners = {
         1: "Portadas/MC.jpg",
-        2: "Portadas/MCAL.jpeg",
-        3: "Portadas/MCA.webp",
-        4: "Portadas/MCI.jpeg",
+        2: "Portadas/MCAL.png",
+        3: "Portadas/MCA.jpg",
+        4: "Portadas/MCI.jpg",
         5: "Portadas/MCM.png"
     };
 
@@ -95,20 +95,80 @@ function generateCards(collectionId, collectionName) {
 
     for (let i = 1; i <= 24; i++) {
         const specificData = buildsData.find(b => b.id === i);
+        
+        // Skip rendering empty boxes from the 2nd box onwards
+        if (i > 1 && !specificData) continue;
+
         const buildTitle = specificData ? specificData.title : `Construcción #${i}`;
         const buildImage = specificData && specificData.imagePath ? `<img src="${specificData.imagePath}" alt="${buildTitle}" style="width:100%; height:100%; object-fit:cover;">` : `<i class="fa-solid fa-cube"></i>`;
 
+        const isFree = i === 1;
+        const freeBadge = isFree ? `<div class="free-badge"><i class="fa-solid fa-unlock"></i> Gratis</div>` : '';
+
         const card = document.createElement('div');
         card.className = 'build-card';
+        card.setAttribute('data-collection', collectionId);
+        
+        if (specificData && specificData.modelPath && specificData.objFile && specificData.mtlFile) {
+            card.setAttribute('data-model-path', specificData.modelPath);
+            card.setAttribute('data-obj-file', specificData.objFile);
+            card.setAttribute('data-mtl-file', specificData.mtlFile);
+        }
+        
         card.innerHTML = `
-            <div class="card-image">
+            ${freeBadge}
+            <div class="card-image" style="position: relative;">
                 ${buildImage}
             </div>
-            <div class="card-info">
+            <div class="card-info" style="position: relative;">
                 <h4>${buildTitle}</h4>
                 <p>${collectionName}</p>
+                <button class="info-btn" aria-label="Más información" title="Más información">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </button>
             </div>
         `;
+        
+        let previewInstance = null;
+        card.addEventListener('mouseenter', () => {
+            const mPath = card.getAttribute('data-model-path');
+            const oFile = card.getAttribute('data-obj-file');
+            const mFile = card.getAttribute('data-mtl-file');
+            
+            if (mPath && oFile && mFile && window.start3DPreview) {
+                const imgContainer = card.querySelector('.card-image');
+                
+                const previewContainer = document.createElement('div');
+                previewContainer.className = 'preview-3d-container';
+                imgContainer.appendChild(previewContainer);
+                
+                previewInstance = window.start3DPreview(previewContainer, mPath, oFile, mFile);
+            }
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            if (previewInstance) {
+                previewInstance.stop();
+                previewInstance = null;
+            }
+            const previewContainer = card.querySelector('.preview-3d-container');
+            if (previewContainer) {
+                previewContainer.remove();
+            }
+        });
+
+
+        const infoBtn = card.querySelector('.info-btn');
+        if (infoBtn) {
+            infoBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Evitar que se abra la construcción
+                const desc = specificData && specificData.description ? specificData.description : "Información detallada próximamente...";
+                const img = specificData ? (specificData.descImagePath || specificData.imagePath || "") : "";
+                const difficulty = specificData && specificData.difficulty ? specificData.difficulty : null;
+                const time = specificData && specificData.time ? specificData.time : null;
+                openInfoModal(buildTitle, desc, img, difficulty, time);
+            });
+        }
 
         card.addEventListener('click', () => {
             if (i > 1 && currentUserTier < 2) {
@@ -128,6 +188,56 @@ function generateCards(collectionId, collectionName) {
         catalogGrid.appendChild(card);
     }
 }
+
+// Global function to open the info modal
+window.openInfoModal = function(title, description, imageSrc, difficulty, time) {
+    const infoModal = document.getElementById('info-modal');
+    const infoTitle = document.getElementById('info-modal-title');
+    const infoDesc = document.getElementById('info-modal-desc');
+    const infoImg = document.getElementById('info-modal-image');
+    const infoStats = document.getElementById('info-modal-stats');
+    
+    if (infoModal && infoTitle && infoDesc) {
+        infoTitle.textContent = title;
+        infoDesc.textContent = description;
+        if (infoImg) {
+            infoImg.src = imageSrc;
+            infoImg.style.display = imageSrc ? 'block' : 'none';
+        }
+
+        if (infoStats) {
+            let difficultyHtml = '';
+            if (difficulty) {
+                const axes = [
+                    'models/item/wooden_axe.png',
+                    'models/item/stone_axe.png',
+                    'models/item/iron_axe.png',
+                    'models/item/diamond_axe.png',
+                    'models/item/netherite_axe.png'
+                ];
+                const axesHtml = axes.map((axe, index) => {
+                    const style = index < difficulty ? '' : 'filter: brightness(0); opacity: 0.25;';
+                    return `<img src="${axe}" alt="Axe" style="width: 24px; height: 24px; image-rendering: pixelated; ${style}">`;
+                }).join('');
+                difficultyHtml = `<span title="Dificultad" style="display:flex; align-items:center; gap: 2px;">${axesHtml}</span>`;
+            }
+
+            let timeHtml = '';
+            if (time) {
+                timeHtml = `<span title="Tiempo estimado" style="display:flex; align-items:center;"><img src="models/item/clock_00.png" alt="Reloj" style="width: 24px; height: 24px; image-rendering: pixelated; margin-right: 6px;">${time}</span>`;
+            }
+
+            if (difficultyHtml || timeHtml) {
+                infoStats.innerHTML = `${difficultyHtml}${timeHtml}`;
+                infoStats.style.display = 'flex';
+            } else {
+                infoStats.style.display = 'none';
+            }
+        }
+
+        infoModal.classList.add('active');
+    }
+};
 
 function initCatalogTabs() {
     collectionTabs.forEach(tab => {

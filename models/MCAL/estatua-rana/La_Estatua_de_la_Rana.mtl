@@ -1,44 +1,5 @@
 # Wavefront OBJ material file
-# Contains 10 materials
-
-newmtl grass_block_top
-Ns 0
-Ka 0.2 0.2 0.2
-Kd 1 1 1
-Ks 0 0 0
-map_Ka grass_block_top_y.png
-# for G3D, to make textures look blocky:
-interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd grass_block_top_y.png
-illum 2
-# d 1
-# Tr 0
-
-newmtl dirt
-Ns 0
-Ka 0.2 0.2 0.2
-Kd 1 1 1
-Ks 0 0 0
-map_Ka dirt.png
-# for G3D, to make textures look blocky:
-interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd dirt.png
-illum 2
-# d 1
-# Tr 0
-
-newmtl grass_block_side
-Ns 0
-Ka 0.2 0.2 0.2
-Kd 1 1 1
-Ks 0 0 0
-map_Ka grass_block_side_y.png
-# for G3D, to make textures look blocky:
-interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
-map_Kd grass_block_side_y.png
-illum 2
-# d 1
-# Tr 0
+# Contains 7 materials
 
 newmtl green_wool
 Ns 0

@@ -1,0 +1,108 @@
+# Wavefront OBJ material file
+# Contains 8 materials
+
+newmtl quartz_block_bottom
+Ns 204
+Ka 0.2 0.2 0.2
+Kd 1 1 1
+Ks 0.24 0.24 0.24
+map_Ka uni/quartz_block_bottom.png
+# for G3D, to make textures look blocky:
+interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
+map_Kd uni/quartz_block_bottom.png
+illum 2
+# d 1
+# Tr 0
+
+newmtl chiseled_quartz_block_top
+Ns 204
+Ka 0.2 0.2 0.2
+Kd 1 1 1
+Ks 0.24 0.24 0.24
+map_Ka uni/chiseled_quartz_block_top.png
+# for G3D, to make textures look blocky:
+interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
+map_Kd uni/chiseled_quartz_block_top.png
+illum 2
+# d 1
+# Tr 0
+
+newmtl chiseled_quartz_block
+Ns 204
+Ka 0.2 0.2 0.2
+Kd 1 1 1
+Ks 0.24 0.24 0.24
+map_Ka uni/chiseled_quartz_block.png
+# for G3D, to make textures look blocky:
+interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
+map_Kd uni/chiseled_quartz_block.png
+illum 2
+# d 1
+# Tr 0
+
+newmtl quartz_pillar_top
+Ns 204
+Ka 0.2 0.2 0.2
+Kd 1 1 1
+Ks 0.24 0.24 0.24
+map_Ka uni/quartz_pillar_top.png
+# for G3D, to make textures look blocky:
+interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
+map_Kd uni/quartz_pillar_top.png
+illum 2
+# d 1
+# Tr 0
+
+newmtl quartz_pillar
+Ns 204
+Ka 0.2 0.2 0.2
+Kd 1 1 1
+Ks 0.24 0.24 0.24
+map_Ka uni/quartz_pillar.png
+# for G3D, to make textures look blocky:
+interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
+map_Kd uni/quartz_pillar.png
+illum 2
+# d 1
+# Tr 0
+
+newmtl end_rod
+Ns 0
+Ka 0.2 0.2 0.2
+Kd 1 1 1
+Ks 0 0 0
+Ke 0.901686 0.901686 0.901686
+map_Ka uni/end_rod.png
+# for G3D, to make textures look blocky:
+interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
+map_Kd uni/end_rod.png
+map_Ke uni/end_rod.png
+illum 2
+# d 1
+# Tr 0
+
+newmtl purpur_block
+Ns 165.75
+Ka 0.2 0.2 0.2
+Kd 1 1 1
+Ks 0.195 0.195 0.195
+map_Ka uni/purpur_block.png
+# for G3D, to make textures look blocky:
+interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
+map_Kd uni/purpur_block.png
+illum 2
+# d 1
+# Tr 0
+
+newmtl polished_blackstone
+Ns 216.75
+Ka 0.2 0.2 0.2
+Kd 1 1 1
+Ks 0.255 0.255 0.255
+map_Ka uni/polished_blackstone.png
+# for G3D, to make textures look blocky:
+interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION
+map_Kd uni/polished_blackstone.png
+illum 2
+# d 1
+# Tr 0

@@ -1,0 +1,69 @@
+@font-face {
+    font-family: 'Minecraft';
+    src: url('../fonts/Minercraftory.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'MacsMinecraft';
+    src: url("../fonts/mac_s_minecraft/mac's%20Minecraft.woff2") format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+:root {
+    --bg-main: #0f111a;
+    --bg-sidebar: #171923;
+    --bg-panel: rgba(30, 32, 45, 0.7);
+    --bg-card: rgba(255, 255, 255, 0.03);
+    --bg-card-hover: rgba(99, 102, 241, 0.1);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent-color: #6366f1;
+    --accent-hover: #4f46e5;
+    --patreon-color: #f96854;
+    --border-color: rgba(255, 255, 255, 0.05);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    overflow: hidden; /* App feels like native app */
+}
+
+.app-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* View System */
+.screen-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.98) translateY(20px);
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s;
+    z-index: 1;
+}
+
+.screen-view.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1) translateY(0);
+    z-index: 2;
+}

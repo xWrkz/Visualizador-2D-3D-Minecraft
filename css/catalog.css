@@ -1,0 +1,224 @@
+/* Catalog View Elements */
+.catalog-container {
+    flex: 1;
+    padding: 90px 2rem 2rem 2rem;
+    /* space for top bar */
+    overflow-y: auto;
+}
+
+.collection-hero-card {
+    grid-column: span 2;
+    grid-row: span 2;
+    border-radius: 1rem;
+    overflow: hidden;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.collection-hero-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: #0b0d14;
+    /* Match app background */
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+}
+
+.build-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.build-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-color);
+    background-color: var(--bg-card-hover);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.free-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #22c55e;
+    color: white;
+    padding: 0.25rem 0.6rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.card-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    font-size: 2rem;
+}
+
+.build-card:hover .card-image {
+    color: var(--accent-color);
+}
+
+.card-info {
+    flex-shrink: 0;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Custom Collection Colors */
+/* Turquesa */
+.build-card[data-collection="1"] .card-info { background-color: rgba(20, 184, 166, 0.15); border-top: 2px solid #14b8a6; }
+.build-card[data-collection="1"]:hover { border-color: #14b8a6; }
+.build-card[data-collection="1"]:hover .card-image { color: #14b8a6; }
+.build-card[data-collection="1"] .info-btn:hover { background-color: #14b8a6; }
+
+/* Rojo */
+.build-card[data-collection="2"] .card-info { background-color: rgba(239, 68, 68, 0.15); border-top: 2px solid #ef4444; }
+.build-card[data-collection="2"]:hover { border-color: #ef4444; }
+.build-card[data-collection="2"]:hover .card-image { color: #ef4444; }
+.build-card[data-collection="2"] .info-btn:hover { background-color: #ef4444; }
+
+/* Morado */
+.build-card[data-collection="3"] .card-info { background-color: rgba(168, 85, 247, 0.15); border-top: 2px solid #a855f7; }
+.build-card[data-collection="3"]:hover { border-color: #a855f7; }
+.build-card[data-collection="3"]:hover .card-image { color: #a855f7; }
+.build-card[data-collection="3"] .info-btn:hover { background-color: #a855f7; }
+
+/* Amarillo */
+.build-card[data-collection="4"] .card-info { background-color: rgba(234, 179, 8, 0.15); border-top: 2px solid #eab308; }
+.build-card[data-collection="4"]:hover { border-color: #eab308; }
+.build-card[data-collection="4"]:hover .card-image { color: #eab308; }
+.build-card[data-collection="4"] .info-btn:hover { background-color: #eab308; }
+
+/* Celeste */
+.build-card[data-collection="5"] .card-info { background-color: rgba(14, 165, 233, 0.15); border-top: 2px solid #0ea5e9; }
+.build-card[data-collection="5"]:hover { border-color: #0ea5e9; }
+.build-card[data-collection="5"]:hover .card-image { color: #0ea5e9; }
+.build-card[data-collection="5"] .info-btn:hover { background-color: #0ea5e9; }
+
+.card-info h4 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+    font-family: 'Minecraft', sans-serif;
+    letter-spacing: 1px;
+}
+
+.card-info p {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-family: 'MacsMinecraft', sans-serif;
+    line-height: 1.4;
+}
+
+/* Custom Scrollbar for Catalog */
+.catalog-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.catalog-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.catalog-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.catalog-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Info Button */
+.info-btn {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    width: 24px;
+    height: 24px;
+    border-radius: 0.25rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.info-btn:hover {
+    background: var(--accent-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+.build-stats {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.build-stats span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+/* 3D Preview Styles */
+.preview-3d-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0b0d14; /* Match card image bg */
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.preview-loader {
+    color: var(--accent-color);
+    font-size: 2rem;
+    position: absolute;
+}

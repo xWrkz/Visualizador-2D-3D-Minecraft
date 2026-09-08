@@ -15,4 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error("El módulo visualizer.js no está cargado correctamente.");
     }
+
+    // 3. Global UI Sounds
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('button, .control-btn, .build-card, .btn');
+        if (target && window.UIAudioManager) {
+            window.UIAudioManager.playClick();
+        }
+    });
 });

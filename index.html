@@ -4,12 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MC Visualizer MVP</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Wrkz Visualizer </title>
+    <!-- CSS Split Files -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/catalog.css">
+    <link rel="stylesheet" href="css/visualizer.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="icon" type="image/png" href="Portadas/LOGOMC.png">
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Driver.js for Tutorial -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
 </head>
 
 <body>
@@ -21,7 +29,7 @@
             <!-- Catalog Sidebar -->
             <aside class="sidebar">
                 <div class="logo">
-                    <i class="fa-solid fa-gem"></i> Wrkz Colecciones
+                    <img src="Portadas/LOGOMC.png" alt="Logo" style="height: 48px; width: auto; object-fit: contain;"> Wrkz Colecciones
                 </div>
 
                 <div class="menu-section">
@@ -68,7 +76,7 @@
             <!-- Visualizer Sidebar -->
             <aside class="sidebar">
                 <div class="logo">
-                    <i class="fa-solid fa-cube"></i> MC Vis
+                    <img src="Portadas/LOGOMC.png" alt="Logo" style="height: 48px; width: auto; object-fit: contain;"> MC Visualizador
                 </div>
 
                 <button class="menu-btn back-btn" id="btn-back-catalog">
@@ -109,7 +117,15 @@
                 </header>
 
                 <div class="visualizer-container">
+                    <div id="crosshair" style="display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; background: white; border-radius: 50%; border: 1.5px solid black; z-index: 1000; pointer-events: none;"></div>
                     <div id="canvas-3d" class="view-panel active">
+                        <!-- Minimap HUD -->
+                        <div id="minimap-wrapper" style="position: absolute; top: 5rem; right: 2rem; width: 160px; height: 160px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.3); box-shadow: 0 0 20px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,0,0,0.5); overflow: hidden; display: none; z-index: 101; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background: rgba(15, 23, 42, 0.4);">
+                            <div style="position: absolute; top: 5px; left: 50%; transform: translateX(-50%); font-weight: bold; color: rgba(255,255,255,0.8); font-size: 0.8rem; z-index: 2; text-shadow: 0 0 4px black;">N</div>
+                            <div style="position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); font-weight: bold; color: rgba(255,255,255,0.8); font-size: 0.8rem; z-index: 2; text-shadow: 0 0 4px black;">S</div>
+                            <div style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-weight: bold; color: rgba(255,255,255,0.8); font-size: 0.8rem; z-index: 2; text-shadow: 0 0 4px black;">E</div>
+                            <div style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-weight: bold; color: rgba(255,255,255,0.8); font-size: 0.8rem; z-index: 2; text-shadow: 0 0 4px black;">O</div>
+                        </div>
                         <!-- Vertical Pan Slider (Camera) -->
                         <div class="vertical-slider-container" id="pan-container" style="left: 2rem;">
                             <label for="pan-slider">Cámara</label>
@@ -118,12 +134,117 @@
 
                         <!-- Vertical Slicer Slider (Layers) -->
                         <div class="vertical-slider-container" id="slice-container" style="right: 2rem; left: auto;">
-                            <label for="slice-slider">Corte</label>
-                            <input type="range" id="slice-slider" min="0" max="100" value="100" orient="vertical">
+                            <label>Cortes Volumétricos</label>
+                            <div class="xyz-sliders">
+                                <div class="slider-group">
+                                    <label>X</label>
+                                    <div class="dual-slider">
+                                        <input type="range" id="slice-slider-x-min" title="Cortar desde la izquierda" orient="vertical">
+                                        <input type="range" id="slice-slider-x-max" title="Cortar desde la derecha" orient="vertical">
+                                    </div>
+                                </div>
+                                <div class="slider-group">
+                                    <label>Y</label>
+                                    <div class="dual-slider">
+                                        <input type="range" id="slice-slider-y-min" title="Cortar desde abajo" orient="vertical">
+                                        <input type="range" id="slice-slider-y-max" title="Cortar desde arriba" orient="vertical">
+                                    </div>
+                                </div>
+                                <div class="slider-group">
+                                    <label>Z</label>
+                                    <div class="dual-slider">
+                                        <input type="range" id="slice-slider-z-min" title="Cortar desde atrás" orient="vertical">
+                                        <input type="range" id="slice-slider-z-max" title="Cortar desde adelante" orient="vertical">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Controles Derecha Inferior -->
+                        <div id="right-controls-container"
+                            style="position: absolute; bottom: 2rem; right: 6rem; z-index: 101; display: flex; gap: 0.5rem; align-items: center;">
+                            <div id="build-active-controls"
+                                style="display: none; position: absolute; bottom: calc(100% + 0.5rem); left: 0; gap: 0.25rem; align-items: center; background: var(--bg-card); padding: 0.25rem; border-radius: 0.75rem; border: 1px solid var(--border-color); box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                                <button id="btn-build-step-back" class="control-btn" title="Retroceder 1 Bloque"
+                                    style="width: 36px; height: 36px; background: transparent; border: none; box-shadow: none;">
+                                    <i class="fa-solid fa-backward-step" style="font-size: 0.9rem;"></i>
+                                </button>
+                                <button id="btn-build-step-forward" class="control-btn" title="Avanzar 1 Bloque"
+                                    style="width: 36px; height: 36px; background: transparent; border: none; box-shadow: none;">
+                                    <i class="fa-solid fa-forward-step" style="font-size: 0.9rem;"></i>
+                                </button>
+                                <div
+                                    style="width: 1px; height: 20px; background: rgba(255,255,255,0.2); margin: 0 4px;">
+                                </div>
+                                <button id="btn-build-stop" class="control-btn" title="Detener Construcción"
+                                    style="width: 36px; height: 36px; background: transparent; border: none; box-shadow: none;">
+                                    <i class="fa-solid fa-square" style="font-size: 0.9rem;"></i>
+                                </button>
+                                <div
+                                    style="width: 1px; height: 20px; background: rgba(255,255,255,0.2); margin: 0 4px;">
+                                </div>
+
+                                <div id="custom-speed-select"
+                                    style="position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0 0.8rem; height: 36px;">
+                                    <span id="current-speed-display"
+                                        style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">x0.25</span>
+                                    <div id="speed-options-menu"
+                                        style="display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 0.5rem; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 0.5rem; border: 1px solid rgba(255,255,255,0.1); flex-direction: column; overflow: hidden; min-width: 70px;">
+                                        <div class="speed-option" data-value="1"
+                                            style="padding: 0.5rem 1rem; color: var(--text-primary); text-align: center; font-weight: 600; transition: background 0.2s;">
+                                            x1</div>
+                                        <div class="speed-option" data-value="0.75"
+                                            style="padding: 0.5rem 1rem; color: var(--text-primary); text-align: center; font-weight: 600; transition: background 0.2s;">
+                                            x0.75</div>
+                                        <div class="speed-option" data-value="0.50"
+                                            style="padding: 0.5rem 1rem; color: var(--text-primary); text-align: center; font-weight: 600; transition: background 0.2s;">
+                                            x0.50</div>
+                                        <div class="speed-option" data-value="0.25"
+                                            style="padding: 0.5rem 1rem; color: var(--text-primary); text-align: center; font-weight: 600; transition: background 0.2s;">
+                                            x0.25</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button id="btn-build-play" class="control-btn" title="Simular Construcción"
+                                style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.5rem; color: var(--text-primary); cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                                <i class="fa-solid fa-hammer"></i>
+                            </button>
+
+                            <button id="btn-first-person" class="control-btn" title="Primera Persona"
+                                style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.5rem; color: var(--text-primary); cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                                <i class="fa-solid fa-street-view"></i>
+                            </button>
+
+                            <button id="btn-inventory" class="control-btn" title="Inventario y Filtros"
+                                style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.5rem; color: var(--text-primary); cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                                <i class="fa-solid fa-clipboard-list"></i>
+                            </button>
+
+                            <button id="btn-explode" class="control-btn" title="Vista Explosionada (Despiece)"
+                                style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.5rem; color: var(--text-primary); cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                                <i class="fa-solid fa-cubes-stacked"></i>
+                            </button>
+
+                            <button id="btn-minimap-toggle" class="control-btn" title="Alternar Minimapa (Plano)"
+                                style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.5rem; color: var(--text-primary); cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                                <i class="fa-solid fa-map-location-dot"></i>
+                            </button>
+
+                            <button id="btn-ruler" class="control-btn" title="Cinta Métrica"
+                                style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.5rem; color: var(--text-primary); cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                                <i class="fa-solid fa-ruler"></i>
+                            </button>
+
+                            <button id="btn-ghost-mode" class="control-btn" title="Modo Capa Fantasma"
+                                style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.5rem; color: var(--text-primary); cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                                <i class="fa-solid fa-ghost"></i>
+                            </button>
                         </div>
 
                         <!-- Controles de Rotación -->
-                        <div class="visualizer-controls" id="visualizer-controls">
+                        <div class="visualizer-controls" id="visualizer-controls"
+                            style="background: rgba(0,0,0,0.4); padding: 0.5rem; border-radius: 1rem; gap: 0.5rem; display: flex; align-items: center;">
                             <button id="btn-rotate-left" class="control-btn" title="Rotar a la izquierda"><i
                                     class="fa-solid fa-rotate-left"></i></button>
                             <button id="btn-toggle-play" class="control-btn" title="Pausar / Reproducir"><i
@@ -131,11 +252,24 @@
                             <button id="btn-rotate-right" class="control-btn" title="Rotar a la derecha"><i
                                     class="fa-solid fa-rotate-right"></i></button>
                         </div>
-                    </div>
 
                     <div id="canvas-2d" class="view-panel"></div>
 
                     <!-- Block Info Panel -->
+                    <div id="ruler-info-panel" class="block-info hidden"
+                        style="position: absolute; top: 6rem; left: 2rem; bottom: auto; background: rgba(0, 0, 0, 0.8); border: 1px solid var(--primary-color);">
+                        <div class="block-icon" style="background: var(--primary-color);">
+                            <i class="fa-solid fa-ruler-combined"></i>
+                        </div>
+                        <div class="block-details">
+                            <h4 style="color: var(--primary-color);">Medición Activa</h4>
+                            <p id="ruler-instructions">Haz clic en el primer bloque.</p>
+                            <p id="ruler-results"
+                                style="display: none; font-family: monospace; font-size: 1.1rem; margin-top: 0.5rem; color: #fff;">
+                            </p>
+                        </div>
+                    </div>
+
                     <div id="block-info-panel" class="block-info hidden">
                         <div class="block-icon" id="block-icon-container">
                             <i class="fa-solid fa-cube"></i>
@@ -170,17 +304,73 @@
         </div>
     </div>
 
+    <!-- Inventory Modal Overlay -->
+    <div class="modal-overlay" id="inventory-modal">
+        <div class="modal-content glass-panel"
+            style="max-width: 600px; width: 90%; max-height: 90vh; display: flex; flex-direction: column;">
+            <button class="close-btn" id="close-inventory-modal" style="flex-shrink: 0;"><i
+                    class="fa-solid fa-xmark"></i></button>
+            <div class="modal-icon" style="flex-shrink: 0;">
+                <i class="fa-solid fa-clipboard-list"></i>
+            </div>
+            <h2 style="flex-shrink: 0;">Inventario de Materiales</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-secondary); flex-shrink: 0;">Haz clic en un bloque para
+                ocultarlo del visualizador.</p>
+
+            <div class="filter-actions" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-shrink: 0;">
+                <button class="btn btn-secondary" id="btn-filter-all" style="flex: 1; padding: 0.5rem;">Ocultar
+                    Todos</button>
+                <button class="btn btn-primary" id="btn-filter-none" style="flex: 1; padding: 0.5rem;">Mostrar
+                    Todos</button>
+            </div>
+
+            <div id="inventory-list" class="block-filter-list"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; overflow-y: auto; padding-right: 0.5rem; text-align: left; flex: 1; min-height: 0;">
+                <!-- Rellenado con JS -->
+            </div>
+            <div
+                style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; font-weight: bold; flex-shrink: 0;">
+                <span>Total de bloques visibles:</span>
+                <span id="inventory-total-count">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="modal-overlay" id="info-modal">
+        <div class="glass-panel modal-content info-modal-content">
+            <button class="close-btn" id="close-info-modal" onclick="document.getElementById('info-modal').classList.remove('active')">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="info-modal-layout">
+                <div class="info-image-container">
+                    <img id="info-modal-image" src="" alt="Imagen de construcción">
+                </div>
+                <div class="info-text-container">
+                    <h2 id="info-modal-title">TITULO</h2>
+                    <p id="info-modal-desc">Descripción...</p>
+                    <div id="info-modal-stats" class="build-stats" style="margin-top: 15px; font-size: 1rem;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Three.js from CDN (Non-module version for local testing) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
     <!-- jsPDF for generating guides -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="js/data.js"></script>
-    <script src="js/catalog.js"></script>
-    <script src="js/visualizer.js"></script>
+    <script src="js/preview.js"></script>
+    <script src="js/data.js?v=10"></script>
+    <script src="js/catalog.js?v=8"></script>
+    <script src="js/audioManager.js"></script>
+    <script src="js/skyboxManager.js"></script>
+    <script src="js/visualizer.js?v=10"></script>
     <script src="js/pdfGenerator.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
     <script src="app.js"></script>
 </body>
 

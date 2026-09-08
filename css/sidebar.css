@@ -1,0 +1,192 @@
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    background-color: var(--bg-sidebar);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    z-index: 10;
+}
+
+.logo {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+    padding: 0 0.5rem;
+    font-family: 'Minecraft', sans-serif;
+}
+
+.logo i {
+    color: var(--accent-color);
+}
+
+.menu-section {
+    margin-bottom: 2rem;
+}
+
+.menu-section h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    padding: 0 0.5rem;
+    font-family: 'Minecraft', sans-serif;
+}
+
+button {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.menu-btn,
+.premium-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    margin-bottom: 0.25rem;
+    font-family: 'MacsMinecraft', sans-serif;
+    line-height: 1.2;
+}
+
+#collection-tabs .menu-btn {
+    font-family: 'Minecraft', sans-serif;
+}
+
+.menu-btn:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.menu-btn.active {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+/* Custom Collection Colors */
+.menu-btn[data-collection="1"].active {
+    background-color: #14b8a6;
+    /* Turquesa */
+    color: white;
+}
+
+.menu-btn[data-collection="2"].active {
+    background-color: #ef4444;
+    /* Morado */
+    color: white;
+}
+
+.menu-btn[data-collection="3"].active {
+    background-color: #a855f7;
+    /* Rojo */
+    color: white;
+}
+
+.menu-btn[data-collection="4"].active {
+    background-color: #eab308;
+    /* Amarillo */
+    color: white;
+    /* Contrast could be an issue, maybe black? Let's use white for consistency */
+}
+
+.menu-btn[data-collection="5"].active {
+    background-color: #0ea5e9;
+    /* Celeste */
+    color: white;
+}
+
+.back-btn {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+}
+
+.back-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.premium-btn {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.05) 100%);
+}
+
+.premium-btn:hover {
+    border-color: var(--patreon-color);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(249, 104, 84, 0.15);
+}
+
+.premium-btn i {
+    color: var(--patreon-color);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100%;
+}
+
+.top-bar {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    background: linear-gradient(to bottom, rgba(15, 17, 26, 0.95) 0%, rgba(15, 17, 26, 0.8) 100%);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+}
+
+.top-bar h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    font-family: 'Minecraft', sans-serif;
+    flex: 1;
+    text-align: center;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-tier {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border-color);
+}
+
+.user-profile img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-color);
+}
