@@ -1,0 +1,376 @@
+/* Visualizer Containers */
+#view-visualizer {
+    background-color: var(--bg-main);
+}
+
+.visualizer-container {
+    flex: 1;
+    position: relative;
+    padding-top: 70px; /* offset top bar in visualizer */
+}
+
+/* Adjust top bar inside visualizer so it doesn't block canvas clicks */
+#view-visualizer .top-bar {
+    pointer-events: none;
+}
+#view-visualizer .user-profile,
+#view-visualizer .mobile-menu-btn {
+    pointer-events: auto;
+}
+
+/* View Panels */
+.view-panel {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.view-panel.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.blueprint-mode {
+    background-color: #1a1c23 !important;
+    background-image: 
+        linear-gradient(rgba(99, 102, 241, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, 0.15) 1px, transparent 1px) !important;
+    background-size: 40px 40px !important;
+}
+
+#canvas-3d {
+    background: radial-gradient(circle at center, #2a2d3e 0%, #0f111a 100%);
+}
+
+/* Vertical Sliders */
+.vertical-slider-container {
+    position: absolute;
+    top: 60%;
+    transform: translateY(-50%);
+    background: rgba(15, 17, 26, 0.9);
+    padding: 1.5rem 1rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    z-index: 10;
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    height: auto;
+}
+
+.vertical-slider-container label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-family: 'MacsMinecraft', sans-serif;
+}
+
+/* Make input[type=range] vertical using CSS */
+#pan-slider, 
+#slice-slider-x-min, #slice-slider-x-max, 
+#slice-slider-y-min, #slice-slider-y-max, 
+#slice-slider-z-min, #slice-slider-z-max {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent; /* Remove white background */
+    writing-mode: vertical-lr;
+    direction: rtl;
+    width: 16px; /* Wider hit area */
+    height: 100px;
+    vertical-align: bottom;
+}
+
+#pan-slider::-webkit-slider-runnable-track, 
+#slice-slider-x-min::-webkit-slider-runnable-track, #slice-slider-x-max::-webkit-slider-runnable-track, 
+#slice-slider-y-min::-webkit-slider-runnable-track, #slice-slider-y-max::-webkit-slider-runnable-track, 
+#slice-slider-z-min::-webkit-slider-runnable-track, #slice-slider-z-max::-webkit-slider-runnable-track {
+    width: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#pan-slider::-webkit-slider-thumb, 
+#slice-slider-x-min::-webkit-slider-thumb, #slice-slider-x-max::-webkit-slider-thumb, 
+#slice-slider-y-min::-webkit-slider-thumb, #slice-slider-y-max::-webkit-slider-thumb, 
+#slice-slider-z-min::-webkit-slider-thumb, #slice-slider-z-max::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--accent-color);
+    margin-left: -5px; /* Center thumb on vertical track */
+}
+
+#pan-slider:focus, 
+#slice-slider-x-min:focus, #slice-slider-x-max:focus, 
+#slice-slider-y-min:focus, #slice-slider-y-max:focus, 
+#slice-slider-z-min:focus, #slice-slider-z-max:focus {
+    outline: none;
+
+}
+
+#pan-slider::-moz-range-track, 
+#slice-slider-x-min::-moz-range-track, #slice-slider-x-max::-moz-range-track, 
+#slice-slider-y-min::-moz-range-track, #slice-slider-y-max::-moz-range-track, 
+#slice-slider-z-min::-moz-range-track, #slice-slider-z-max::-moz-range-track {
+    width: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#pan-slider::-moz-range-thumb, 
+#slice-slider-x-min::-moz-range-thumb, #slice-slider-x-max::-moz-range-thumb, 
+#slice-slider-y-min::-moz-range-thumb, #slice-slider-y-max::-moz-range-thumb, 
+#slice-slider-z-min::-moz-range-thumb, #slice-slider-z-max::-moz-range-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--accent-color);
+    border: none;
+}
+
+.xyz-sliders {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+}
+
+.slider-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.dual-slider {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+.slider-group label {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+/* Visualizer Controls */
+.visualizer-controls {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+    background: rgba(15, 17, 26, 0.8);
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    z-index: 10;
+    pointer-events: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.control-btn {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.control-btn:hover {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-hover);
+    transform: scale(1.1);
+}
+
+/* Block Info Panel */
+.block-info {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    background: rgba(30, 32, 45, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 10;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: auto;
+    font-family: 'MacsMinecraft', sans-serif;
+}
+
+.block-info.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+}
+
+.block-icon {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+}
+
+.block-details h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.block-details p {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* Responsive Rules for Visualizer */
+@media (max-width: 768px) {
+    .vertical-slider-container {
+        top: 45%;
+        transform: scale(0.7) translateY(-50%);
+        transform-origin: left center;
+        padding: 1rem 0.5rem;
+    }
+
+    #slice-container {
+        transform-origin: right center;
+        right: 0.5rem !important;
+    }
+
+    #pan-container {
+        left: 0.5rem !important;
+    }
+
+    /* In 2D mode, move them to the bottom corners so they don't overlap the model */
+    body.is-2d-mode .vertical-slider-container {
+        top: auto;
+        bottom: 5rem;
+        transform: scale(0.7);
+    }
+
+    body.is-2d-mode #slice-container {
+        transform-origin: bottom right;
+    }
+
+    body.is-2d-mode #pan-container {
+        transform-origin: bottom left;
+    }
+
+    #right-controls-container {
+        right: 0.5rem !important;
+        bottom: 0.75rem !important;
+        left: 0.5rem !important;
+        justify-content: center !important;
+    }
+
+    /* Ocultar botones innecesarios en móvil */
+    #btn-first-person, #btn-minimap-toggle {
+        display: none !important;
+    }
+
+    #visualizer-controls {
+        bottom: 6.5rem !important;
+        padding: 0.25rem 0.75rem !important;
+    }
+
+    #visualizer-controls .control-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+
+    /* Wrapper to contain both panels on mobile */
+    #block-info-wrapper {
+        position: absolute;
+        top: 5.5rem;
+        bottom: auto;
+        left: 50%;
+        transform: translateX(-50%) scale(0.85);
+        transform-origin: top center;
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        z-index: 105;
+        pointer-events: none;
+        width: max-content;
+        max-width: 110%; /* since scaled down, it can be slightly wider internally */
+    }
+
+    #block-info-panel, #block-info-recipe {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: none !important;
+        pointer-events: auto;
+        width: auto !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+    }
+
+    #block-info-panel {
+        padding: 0.5rem 0.8rem !important;
+    }
+
+    #block-info-recipe {
+        padding: 0.5rem !important;
+    }
+
+    /* Fusion styles: merge the borders when both are visible */
+    #block-info-panel:not(.hidden) + #block-info-recipe:not(.hidden) {
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        border-left: none !important;
+    }
+
+    #block-info-panel:has(+ #block-info-recipe:not(.hidden)) {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        border-right: 1px solid rgba(255,255,255,0.1) !important;
+    }
+
+    /* Ensure hidden panels take no space */
+    #block-info-panel.hidden, #block-info-recipe.hidden {
+        display: none !important;
+    }
+
+    #minimap-wrapper {
+        top: 8rem !important;
+        right: 1rem !important;
+        width: 100px !important;
+        height: 100px !important;
+    }
+}

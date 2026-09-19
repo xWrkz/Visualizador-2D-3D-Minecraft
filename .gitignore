@@ -1,5 +1,3 @@
 node_modules/
-scratch/
-debug_browser.js
-js/visualizer_reconstructed.js
+dist/
 temp.txt

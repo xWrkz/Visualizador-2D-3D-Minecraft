@@ -5,58 +5,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wrkz Visualizer </title>
-    <!-- CSS Split Files -->
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/catalog.css">
-    <link rel="stylesheet" href="css/visualizer.css">
-    <link rel="stylesheet" href="css/modals.css">
-    <link rel="icon" type="image/png" href="Portadas/LOGOMC.png">
-    <!-- Font Awesome for Icons -->
+    <!-- CSS importado vía Vite en src/main.js -->
+    <link rel="icon" type="image/png" href="portadas/LOGOMC.png">
+    <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=Pixelify+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Driver.js for Tutorial -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css" />
+    <!-- App CSS -->
+    <link rel="stylesheet" href="/src/css/base.css">
+    <link rel="stylesheet" href="/src/css/sidebar.css">
+    <link rel="stylesheet" href="/src/css/catalog.css">
+    <link rel="stylesheet" href="/src/css/visualizer.css">
+    <link rel="stylesheet" href="/src/css/modals.css">
+    <link rel="stylesheet" href="/src/css/crafting.css">
+    <link rel="stylesheet" href="/src/css/landing.css">
 </head>
 
 <body>
     <div class="app-container">
 
+        <!-- View 0: LANDING PAGE -->
+        <div id="view-landing" class="screen-view active">
+            <!-- Navbar -->
+            <nav class="landing-navbar">
+                <div class="logo" style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+                    <img src="portadas/LOGOMC.png" alt="Logo" style="height: 48px; width: auto; object-fit: contain;">
+                    <span class="landing-logo">Wrkz Colecciones</span>
+                </div>
+                <div class="landing-nav-links">
+                    <a href="#herramientas">Herramientas</a>
+                    <a href="#collections">Colecciones</a>
+                </div>
+                <div class="landing-actions" id="landing-auth-container">
+                    <!-- Auth will be rendered here by JS -->
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section class="landing-hero">
+                <div class="hero-content">
+                    <h1>Descubre las mejores <span>construcciones</span> para Minecraft</h1>
+                    <p>Explora, inspecciona capa por capa y consigue las listas de materiales exactas para replicar
+                        construcciones increíbles en tu mundo.</p>
+                    <button class="hero-btn" id="btn-explore-landing">
+                        Explorar construcciones <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="hero-visuals">
+                    <div class="hero-column column-up">
+                        <img src="portadas-construcciones/MC/1/Creeper desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MCAL/1/Rana desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MCM/1/Espejo Magico desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MCI/1/unicornio desc.png" alt="Construcción">
+                        <!-- Duplicates for seamless looping -->
+                        <img src="portadas-construcciones/MC/1/Creeper desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MCAL/1/Rana desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MCM/1/Espejo Magico desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MCI/1/unicornio desc.png" alt="Construcción">
+                    </div>
+                    <div class="hero-column column-down">
+                        <img src="portadas-construcciones/MCI/1/unicornio desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MCM/1/Espejo Magico desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MC/1/Creeper desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MCAL/1/Rana desc.png" alt="Construcción">
+                        <!-- Duplicates -->
+                        <img src="portadas-construcciones/MCI/1/unicornio desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MCM/1/Espejo Magico desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MC/1/Creeper desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MCAL/1/Rana desc.png" alt="Construcción">
+                    </div>
+                    <div class="hero-column column-up" style="animation-duration: 22s;">
+                        <img src="portadas-construcciones/MCAL/1/Rana desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MCI/1/unicornio desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MCM/1/Espejo Magico desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MC/1/Creeper desc.png" alt="Construcción">
+                        <!-- Duplicates -->
+                        <img src="portadas-construcciones/MCAL/1/Rana desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MCI/1/unicornio desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MCM/1/Espejo Magico desc.png" alt="Construcción">
+                        <img src="portadas-construcciones/MC/1/Creeper desc.png" alt="Construcción">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section id="herramientas" class="landing-features">
+                <div class="features-media" id="features-media-container">
+                    <div class="feature-media-item active" id="media-feature-1">
+                        <video src="clips/3D.mp4" loop muted playsinline></video>
+                    </div>
+                    <div class="feature-media-item" id="media-feature-2">
+                        <video src="clips/2D.mp4" loop muted playsinline></video>
+                    </div>
+                    <div class="feature-media-item" id="media-feature-3">
+                        <video src="clips/Materiales.mp4" loop muted playsinline></video>
+                    </div>
+                </div>
+                <div class="features-list">
+                    <div class="feature-item active" data-feature="1">
+                        <h3><i class="fa-solid fa-cube"></i> Visualizador 3D</h3>
+                        <p>Órbita alrededor de la construcción o métete dentro con WASD en primera persona para explorar
+                            cada rincón y función.</p>
+                    </div>
+                    <div class="feature-item" data-feature="2">
+                        <h3><i class="fa-solid fa-layer-group"></i> Visualizador 2D</h3>
+                        <p>Corta la construcción volumétricamente y navega plano por plano. Ideal para replicar
+                            interiores paso a paso.</p>
+                    </div>
+                    <div class="feature-item" data-feature="3">
+                        <h3><i class="fa-solid fa-clipboard-list"></i> Materiales y Crafteos</h3>
+                        <p>Obtén un recuento exacto de bloques y el árbol de recetas necesarias para construir todo en
+                            modo supervivencia.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Collections Section -->
+            <section id="collections" class="landing-collections">
+                <div class="collections-header">
+                    <h2>Colecciones de Libros</h2>
+                    <p>Explora las construcciones oficiales de cada libro</p>
+                </div>
+                <div class="books-grid" id="landing-books-grid">
+                    <!-- Books are injected dynamically from data.js -->
+                </div>
+            </section>
+        </div>
+
         <!-- View 1: CATALOG -->
-        <div id="view-catalog" class="screen-view active">
+        <div id="view-catalog" class="screen-view">
+            <!-- Mobile Overlay -->
+            <div class="mobile-overlay"></div>
 
             <!-- Catalog Sidebar -->
             <aside class="sidebar">
-                <div class="logo">
-                    <img src="Portadas/LOGOMC.png" alt="Logo" style="height: 48px; width: auto; object-fit: contain;"> Wrkz Colecciones
+                <div class="logo" id="catalog-logo" style="cursor: pointer;">
+                    <img src="portadas/LOGOMC.png" alt="Logo" style="height: 48px; width: auto; object-fit: contain;">
+                    Wrkz Colecciones
                 </div>
 
                 <div class="menu-section">
                     <h3>Colecciones</h3>
                     <div id="collection-tabs">
-                        <button class="menu-btn active" data-collection="1">
-                            <i class="fa-solid fa-cube"></i> Mini-Construcciones
-                        </button>
-                        <button class="menu-btn" data-collection="2">
-                            <i class="fa-solid fa-bolt"></i> Mini-Construcciones Alucinantes
-                        </button>
-                        <button class="menu-btn" data-collection="3">
-                            <i class="fa-solid fa-fire"></i> Mini-Construcciones Asombrosas
-                        </button>
-                        <button class="menu-btn" data-collection="4">
-                            <i class="fa-solid fa-star"></i> Mini-Construcciones Increibles
-                        </button>
-                        <button class="menu-btn" data-collection="5">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> Mini-Construcciones Mágicas
-                        </button>
+                        <!-- Tabs are injected dynamically from data.js -->
                     </div>
                 </div>
+
+
             </aside>
 
             <!-- Catalog Main -->
             <main class="main-content">
                 <header class="top-bar">
+                    <button class="mobile-menu-btn" id="btn-mobile-catalog">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
                     <h2 id="current-collection-title">Mini-Construcciones</h2>
                     <div class="user-profile" id="catalog-user-profile">
                         <!-- Será llenado por JS dependiendo de la cookie -->
@@ -67,16 +174,69 @@
                     <div class="cards-grid" id="catalog-grid">
                         <!-- Cards will be injected by app.js -->
                     </div>
+
+                    <!-- Mega Footer -->
+                    <footer class="mega-footer">
+                        <div class="footer-columns">
+                            <div class="footer-col brand-col">
+                                <div class="footer-logo">
+                                    <img src="portadas/LOGOMC.png" alt="Wrkz MC"
+                                        style="height: 36px; object-fit: contain;">
+                                    <span
+                                        style="font-family: 'Minecraft', sans-serif; font-size: 1.2rem; margin-left: 10px;">Wrkz
+                                        MC</span>
+                                </div>
+                                <p class="footer-desc">Visualizador interactivo y herramientas de crafteo para
+                                    construcciones de Minecraft creadas para la comunidad.</p>
+                                <div class="footer-socials">
+                                    <a href="https://www.youtube.com/@xWrkzMC" target="_blank" class="social-btn"
+                                        title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                                    <a href="https://www.patreon.com/c/WrkzUwU" target="_blank" class="social-btn"
+                                        title="Patreon"><i class="fa-brands fa-patreon"></i></a>
+                                    <a href="https://Ko-fi.com/wrkzuwu" target="_blank" class="social-btn"
+                                        title="Ko-fi"><i class="fa-solid fa-mug-hot"></i></a>
+                                </div>
+                            </div>
+
+                            <div class="footer-col">
+                                <h4>LEGAL</h4>
+                                <a href="legal/terms.html">Términos y Condiciones</a>
+                                <a href="legal/privacy.html">Política de Privacidad</a>
+                                <a href="legal/cookies.html">Política de Cookies</a>
+                            </div>
+
+
+
+                            <div class="footer-col">
+                                <h4>COMUNIDAD</h4>
+                                <a href="https://www.youtube.com/@xWrkzMC" target="_blank">Canal de YouTube</a>
+                                <a href="mailto:wrkzinc.studio@gmail.com">Contacto / Soporte</a>
+                            </div>
+                        </div>
+
+                        <div class="footer-bottom">
+                            <div class="copyright">
+                                &copy; 2026 Wrkz MC. Todos los derechos reservados.
+                            </div>
+                            <div class="mojang-disclaimer">
+                                Not affiliated with Mojang Studios. Minecraft® is a registered trademark of Mojang AB.
+                            </div>
+                        </div>
+                    </footer>
                 </div>
             </main>
         </div>
 
         <!-- View 2: VISUALIZER (Hidden by default) -->
         <div id="view-visualizer" class="screen-view">
+            <!-- Mobile Overlay -->
+            <div class="mobile-overlay"></div>
+
             <!-- Visualizer Sidebar -->
             <aside class="sidebar">
-                <div class="logo">
-                    <img src="Portadas/LOGOMC.png" alt="Logo" style="height: 48px; width: auto; object-fit: contain;"> MC Visualizador
+                <div class="logo" id="visualizer-logo" style="cursor: pointer;">
+                    <img src="portadas/LOGOMC.png" alt="Logo" style="height: 48px; width: auto; object-fit: contain;">
+                    MC Visualizador
                 </div>
 
                 <button class="menu-btn back-btn" id="btn-back-catalog">
@@ -90,6 +250,9 @@
                     </button>
                     <button class="menu-btn" id="btn-2d">
                         <i class="fa-solid fa-layer-group"></i> Visualizador 2D
+                    </button>
+                    <button class="menu-btn" id="btn-crafting">
+                        <i class="fa-solid fa-hammer"></i> Crafteos
                     </button>
                 </div>
 
@@ -105,11 +268,19 @@
                         <i class="fa-solid fa-cube"></i> Archivo .mcstructure
                     </button>
                 </div>
+
+                <!-- Botón colapsar lateral (Flecha) -->
+                <button id="btn-toggle-sidebar" class="sidebar-toggle-arrow" title="Ocultar/Mostrar Menú">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
             </aside>
 
             <!-- Visualizer Main -->
             <main class="main-content">
                 <header class="top-bar">
+                    <button class="mobile-menu-btn" id="btn-mobile-visualizer">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
                     <h2 id="visualizer-title">Vista Previa</h2>
                     <div class="user-profile" id="visualizer-user-profile">
                         <!-- Será llenado por JS dependiendo de la cookie -->
@@ -117,14 +288,25 @@
                 </header>
 
                 <div class="visualizer-container">
-                    <div id="crosshair" style="display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; background: white; border-radius: 50%; border: 1.5px solid black; z-index: 1000; pointer-events: none;"></div>
+                    <div id="crosshair"
+                        style="display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; background: white; border-radius: 50%; border: 1.5px solid black; z-index: 1000; pointer-events: none;">
+                    </div>
                     <div id="canvas-3d" class="view-panel active">
                         <!-- Minimap HUD -->
-                        <div id="minimap-wrapper" style="position: absolute; top: 5rem; right: 2rem; width: 160px; height: 160px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.3); box-shadow: 0 0 20px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,0,0,0.5); overflow: hidden; display: none; z-index: 101; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background: rgba(15, 23, 42, 0.4);">
-                            <div style="position: absolute; top: 5px; left: 50%; transform: translateX(-50%); font-weight: bold; color: rgba(255,255,255,0.8); font-size: 0.8rem; z-index: 2; text-shadow: 0 0 4px black;">N</div>
-                            <div style="position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); font-weight: bold; color: rgba(255,255,255,0.8); font-size: 0.8rem; z-index: 2; text-shadow: 0 0 4px black;">S</div>
-                            <div style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-weight: bold; color: rgba(255,255,255,0.8); font-size: 0.8rem; z-index: 2; text-shadow: 0 0 4px black;">E</div>
-                            <div style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-weight: bold; color: rgba(255,255,255,0.8); font-size: 0.8rem; z-index: 2; text-shadow: 0 0 4px black;">O</div>
+                        <div id="minimap-wrapper"
+                            style="position: absolute; top: 5rem; right: 2rem; width: 160px; height: 160px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.3); box-shadow: 0 0 20px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,0,0,0.5); overflow: hidden; display: none; z-index: 101; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background: rgba(15, 23, 42, 0.4);">
+                            <div
+                                style="position: absolute; top: 5px; left: 50%; transform: translateX(-50%); font-weight: bold; color: rgba(255,255,255,0.8); font-size: 0.8rem; z-index: 2; text-shadow: 0 0 4px black;">
+                                N</div>
+                            <div
+                                style="position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); font-weight: bold; color: rgba(255,255,255,0.8); font-size: 0.8rem; z-index: 2; text-shadow: 0 0 4px black;">
+                                S</div>
+                            <div
+                                style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-weight: bold; color: rgba(255,255,255,0.8); font-size: 0.8rem; z-index: 2; text-shadow: 0 0 4px black;">
+                                E</div>
+                            <div
+                                style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-weight: bold; color: rgba(255,255,255,0.8); font-size: 0.8rem; z-index: 2; text-shadow: 0 0 4px black;">
+                                O</div>
                         </div>
                         <!-- Vertical Pan Slider (Camera) -->
                         <div class="vertical-slider-container" id="pan-container" style="left: 2rem;">
@@ -136,25 +318,40 @@
                         <div class="vertical-slider-container" id="slice-container" style="right: 2rem; left: auto;">
                             <label>Cortes Volumétricos</label>
                             <div class="xyz-sliders">
-                                <div class="slider-group">
+                                <div class="slider-group" style="position: relative;">
+                                    <div id="layer-indicator-x"
+                                        style="position: absolute; bottom: -45px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; color: #fff; font-weight: bold; background: var(--accent-color, #00ffcc); color: #000; padding: 2px 6px; border-radius: 4px; pointer-events: none; white-space: nowrap; z-index: 10;">
+                                        X</div>
                                     <label>X</label>
                                     <div class="dual-slider">
-                                        <input type="range" id="slice-slider-x-min" title="Cortar desde la izquierda" orient="vertical">
-                                        <input type="range" id="slice-slider-x-max" title="Cortar desde la derecha" orient="vertical">
+                                        <input type="range" id="slice-slider-x-min" title="Cortar desde la izquierda"
+                                            orient="vertical">
+                                        <input type="range" id="slice-slider-x-max" title="Cortar desde la derecha"
+                                            orient="vertical">
                                     </div>
                                 </div>
-                                <div class="slider-group">
+                                <div class="slider-group" style="position: relative;">
+                                    <div id="layer-indicator-y"
+                                        style="position: absolute; top: -65px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; color: #fff; font-weight: bold; background: var(--accent-color, #00ffcc); color: #000; padding: 2px 6px; border-radius: 4px; pointer-events: none; white-space: nowrap; z-index: 10;">
+                                        Y</div>
                                     <label>Y</label>
                                     <div class="dual-slider">
-                                        <input type="range" id="slice-slider-y-min" title="Cortar desde abajo" orient="vertical">
-                                        <input type="range" id="slice-slider-y-max" title="Cortar desde arriba" orient="vertical">
+                                        <input type="range" id="slice-slider-y-min" title="Cortar desde abajo"
+                                            orient="vertical">
+                                        <input type="range" id="slice-slider-y-max" title="Cortar desde arriba"
+                                            orient="vertical">
                                     </div>
                                 </div>
-                                <div class="slider-group">
+                                <div class="slider-group" style="position: relative;">
+                                    <div id="layer-indicator-z"
+                                        style="position: absolute; bottom: -45px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; color: #fff; font-weight: bold; background: var(--accent-color, #00ffcc); color: #000; padding: 2px 6px; border-radius: 4px; pointer-events: none; white-space: nowrap; z-index: 10;">
+                                        Z</div>
                                     <label>Z</label>
                                     <div class="dual-slider">
-                                        <input type="range" id="slice-slider-z-min" title="Cortar desde atrás" orient="vertical">
-                                        <input type="range" id="slice-slider-z-max" title="Cortar desde adelante" orient="vertical">
+                                        <input type="range" id="slice-slider-z-min" title="Cortar desde atrás"
+                                            orient="vertical">
+                                        <input type="range" id="slice-slider-z-max" title="Cortar desde adelante"
+                                            orient="vertical">
                                     </div>
                                 </div>
                             </div>
@@ -253,32 +450,65 @@
                                     class="fa-solid fa-rotate-right"></i></button>
                         </div>
 
-                    <div id="canvas-2d" class="view-panel"></div>
-
-                    <!-- Block Info Panel -->
-                    <div id="ruler-info-panel" class="block-info hidden"
-                        style="position: absolute; top: 6rem; left: 2rem; bottom: auto; background: rgba(0, 0, 0, 0.8); border: 1px solid var(--primary-color);">
-                        <div class="block-icon" style="background: var(--primary-color);">
-                            <i class="fa-solid fa-ruler-combined"></i>
+                        <div id="canvas-2d" class="view-panel">
+                            <canvas id="topDownCanvas"></canvas>
                         </div>
-                        <div class="block-details">
-                            <h4 style="color: var(--primary-color);">Medición Activa</h4>
-                            <p id="ruler-instructions">Haz clic en el primer bloque.</p>
-                            <p id="ruler-results"
-                                style="display: none; font-family: monospace; font-size: 1.1rem; margin-top: 0.5rem; color: #fff;">
-                            </p>
+
+                        <!-- Block Info Panel -->
+                        <div id="ruler-info-panel" class="block-info hidden"
+                            style="position: absolute; top: 6rem; left: 2rem; bottom: auto; background: rgba(0, 0, 0, 0.8); border: 1px solid var(--primary-color);">
+                            <div class="block-icon" style="background: var(--primary-color);">
+                                <i class="fa-solid fa-ruler-combined"></i>
+                            </div>
+                            <div class="block-details">
+                                <h4 style="color: var(--primary-color);">Medición Activa</h4>
+                                <p id="ruler-instructions">Haz clic en el primer bloque.</p>
+                                <p id="ruler-results"
+                                    style="display: none; font-family: monospace; font-size: 1.1rem; margin-top: 0.5rem; color: #fff;">
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="block-info-wrapper">
+                            <div id="block-info-panel" class="block-info hidden">
+                                <div class="block-icon" id="block-icon-container">
+                                    <i class="fa-solid fa-cube"></i>
+                                </div>
+                                <div class="block-details">
+                                    <h4 id="block-name">Selecciona un bloque</h4>
+                                    <p id="block-coords">X: - Y: - Z: -</p>
+                                </div>
+                            </div>
+
+                            <!-- Crafting Recipe Floating Panel -->
+                            <div id="block-info-recipe" class="block-info hidden"
+                                style="position: absolute; top: 5rem; left: 8rem; bottom: auto; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255, 255, 255, 0.2); padding: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.8); z-index: 105; flex-direction: column; align-items: center; gap: 0.5rem; transition: opacity 0.2s;">
+                            </div>
+                        </div>
+                    </div> <!-- closes canvas-3d -->
+
+                    <!-- Panel Crafteos -->
+                    <div id="panel-crafting" class="view-panel" style="z-index: 10; background: var(--bg-main);">
+                        <div class="crafting-header">
+                            <div class="crafting-tabs">
+                                <button class="crafting-tab active" id="tab-crafting-list">Lista</button>
+                                <button class="crafting-tab" id="tab-crafting-map">Mapa</button>
+                            </div>
+                            <div class="crafting-search">
+                                <input type="text" id="crafting-search-input" placeholder="Buscar elemento...">
+                            </div>
+                        </div>
+                        <div class="crafting-content-wrapper">
+                            <div id="crafting-list-view" class="crafting-view active">
+                                <div class="crafting-blocks-title">BLOQUES DE LA ESTRUCTURA</div>
+                                <div id="crafting-list-container"></div>
+                            </div>
+                            <div id="crafting-map-view" class="crafting-view" style="display: none;">
+                                <div id="crafting-tree-container"></div>
+                            </div>
                         </div>
                     </div>
 
-                    <div id="block-info-panel" class="block-info hidden">
-                        <div class="block-icon" id="block-icon-container">
-                            <i class="fa-solid fa-cube"></i>
-                        </div>
-                        <div class="block-details">
-                            <h4 id="block-name">Selecciona un bloque</h4>
-                            <p id="block-coords">X: - Y: - Z: -</p>
-                        </div>
-                    </div>
                 </div>
             </main>
         </div>
@@ -325,7 +555,7 @@
             </div>
 
             <div id="inventory-list" class="block-filter-list"
-                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; overflow-y: auto; padding-right: 0.5rem; text-align: left; flex: 1; min-height: 0;">
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; overflow-y: auto; padding-right: 0.5rem; text-align: left; flex: 1; min-height: 0; will-change: transform; transform: translateZ(0); -webkit-overflow-scrolling: touch;">
                 <!-- Rellenado con JS -->
             </div>
             <div
@@ -339,7 +569,8 @@
     <!-- Info Modal -->
     <div class="modal-overlay" id="info-modal">
         <div class="glass-panel modal-content info-modal-content">
-            <button class="close-btn" id="close-info-modal" onclick="document.getElementById('info-modal').classList.remove('active')">
+            <button class="close-btn" id="close-info-modal"
+                onclick="document.getElementById('info-modal').classList.remove('active')">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             <div class="info-modal-layout">
@@ -355,23 +586,28 @@
         </div>
     </div>
 
-    <!-- Three.js from CDN (Non-module version for local testing) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
-    <!-- jsPDF for generating guides -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="js/preview.js"></script>
-    <script src="js/data.js?v=10"></script>
-    <script src="js/catalog.js?v=8"></script>
-    <script src="js/audioManager.js"></script>
-    <script src="js/skyboxManager.js"></script>
-    <script src="js/visualizer.js?v=10"></script>
-    <script src="js/pdfGenerator.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
-    <script src="app.js"></script>
+    <!-- About Modal -->
+    <div class="modal-overlay" id="about-modal">
+        <div class="modal-content glass-panel" style="max-width: 500px; text-align: center;">
+            <button class="close-btn" onclick="document.getElementById('about-modal').classList.remove('active')"><i
+                    class="fa-solid fa-xmark"></i></button>
+            <div class="modal-icon">
+                <i class="fa-brands fa-youtube" style="color: #ff0000; font-size: 3rem;"></i>
+            </div>
+            <h2 style="margin-top: 1rem;">Mi Canal de YouTube</h2>
+            <p style="margin: 1rem 0; color: var(--text-secondary); line-height: 1.5;">
+                ¡Hola! Soy el creador de xWrkz. Aquí subo contenido increíble sobre Minecraft y comparto mis mejores
+                construcciones y tutoriales.
+            </p>
+            <a href="https://www.youtube.com/@xWrkzMC" target="_blank" class="btn btn-primary"
+                style="display: inline-flex; align-items: center; gap: 0.5rem; background-color: #ff0000; border-color: #ff0000; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 0.5rem; font-weight: bold; margin-top: 1rem;">
+                <i class="fa-brands fa-youtube"></i> Visitar Canal
+            </a>
+        </div>
+    </div>
+
+    <!-- Punto de Entrada de Vite -->
+    <script type="module" src="/src/main.js"></script>
 </body>
 
 </html>
