@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+const { generateOAuthState } = require('./session-utils.cjs');
 
 exports.handler = async (event, context) => {
     const CLIENT_ID = process.env.PATREON_CLIENT_ID;
@@ -11,18 +11,21 @@ exports.handler = async (event, context) => {
         };
     }
 
-    // Generar un token de estado aleatorio criptográficamente seguro para prevenir CSRF
-    const state = crypto.randomBytes(24).toString('hex');
+    // Generar un token de estado firmado criptográficamente (contiene timestamp + nonce + firma HMAC)
+    // Esto garantiza que el estado sea auto-validable sin depender de cookies que Safari o Chrome puedan bloquear en redirecciones externas
+    const state = generateOAuthState();
     const patreonAuthUrl = `https://www.patreon.com/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identity%20identity.memberships&state=${state}`;
 
-    // Cookie temporal con SameSite=Lax y HttpOnly para validar en el callback (expira en 10 minutos)
-    const stateCookie = `mc_oauth_state=${state}; Path=/; Max-Age=600; HttpOnly; SameSite=Lax;`;
+    const stateCookie = `mc_oauth_state=${state}; Path=/; Max-Age=900; HttpOnly; SameSite=Lax;`;
 
     return {
         statusCode: 302,
         headers: {
             Location: patreonAuthUrl,
             'Set-Cookie': stateCookie
+        },
+        multiValueHeaders: {
+            'Set-Cookie': [stateCookie]
         }
     };
 };

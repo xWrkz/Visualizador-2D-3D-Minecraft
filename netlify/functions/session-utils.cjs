@@ -72,6 +72,55 @@ function verifySession(token) {
     }
 }
 
+/**
+ * Genera un token state firmado criptográficamente para el flujo OAuth.
+ * Contiene timestamp y nonce aleatorio firmado con HMAC-SHA256.
+ * Esto protege contra CSRF de forma stateless sin depender de cookies de terceros que los navegadores bloquean.
+ */
+function generateOAuthState() {
+    const timestamp = Math.floor(Date.now() / 1000);
+    const nonce = crypto.randomBytes(16).toString('hex');
+    const secret = getSecret();
+    const payload = `${timestamp}.${nonce}`;
+    const signature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
+    return `${payload}.${signature}`;
+}
+
+/**
+ * Valida un token state devuelto por Patreon en el callback.
+ */
+function verifyOAuthState(stateStr, maxAgeSeconds = 900) {
+    if (!stateStr || typeof stateStr !== 'string') return false;
+    const parts = stateStr.split('.');
+    if (parts.length !== 3) return false;
+
+    const [timestampStr, nonce, signature] = parts;
+    const timestamp = parseInt(timestampStr, 10);
+    if (isNaN(timestamp)) return false;
+
+    // Verificar si expiró (15 minutos)
+    const now = Math.floor(Date.now() / 1000);
+    if (now - timestamp > maxAgeSeconds || timestamp > now + 60) {
+        return false;
+    }
+
+    const secret = getSecret();
+    const payload = `${timestampStr}.${nonce}`;
+    const expectedSignature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
+
+    try {
+        const sigBuf = Buffer.from(signature);
+        const expBuf = Buffer.from(expectedSignature);
+        if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
+            return false;
+        }
+    } catch {
+        return false;
+    }
+
+    return true;
+}
+
 function getTierName(tier) {
     if (tier === 3) return "Arquitecto";
     if (tier === 2) return "Maestro";
@@ -83,5 +132,7 @@ module.exports = {
     parseCookies,
     signSession,
     verifySession,
+    generateOAuthState,
+    verifyOAuthState,
     getTierName
 };

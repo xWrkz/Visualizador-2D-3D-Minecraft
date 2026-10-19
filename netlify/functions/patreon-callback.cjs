@@ -1,4 +1,4 @@
-const { parseCookies, signSession } = require('./session-utils.cjs');
+const { parseCookies, signSession, verifyOAuthState } = require('./session-utils.cjs');
 
 exports.handler = async (event, context) => {
     const code = event.queryStringParameters && event.queryStringParameters.code;
@@ -9,15 +9,22 @@ exports.handler = async (event, context) => {
     const REDIRECT_URI = process.env.PATREON_REDIRECT_URI;
 
     // 1. Validar Token Anti-CSRF
-    const cookieHeader = event.headers.cookie || event.headers.Cookie || '';
-    const cookies = parseCookies(cookieHeader);
-    const expectedState = cookies.mc_oauth_state;
+    // Primero validamos la firma criptográfica del estado (inmune a pérdida de cookies en redirecciones)
+    const isStateValid = verifyOAuthState(receivedState);
 
-    if (!receivedState || !expectedState || receivedState !== expectedState) {
-        return {
-            statusCode: 403,
-            body: "Error de seguridad: Estado de autenticación inválido o expirado. Por favor, intenta conectar Patreon nuevamente."
-        };
+    if (!isStateValid) {
+        // Fallback: verificar con cookie por compatibilidad
+        const cookieHeader = event.headers.cookie || event.headers.Cookie || '';
+        const cookies = parseCookies(cookieHeader);
+        const expectedState = cookies.mc_oauth_state;
+
+        if (!receivedState || !expectedState || receivedState !== expectedState) {
+            console.error('[Patreon Callback] CSRF validation failed. state:', receivedState, 'cookieState:', expectedState);
+            return {
+                statusCode: 403,
+                body: "Error de seguridad: Estado de autenticación inválido o expirado. Por favor, intenta conectar Patreon nuevamente."
+            };
+        }
     }
 
     if (!code) {
