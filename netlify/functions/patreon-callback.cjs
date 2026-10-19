@@ -1,4 +1,4 @@
-const { parseCookies, signSession, verifyOAuthState } = require('./session-utils.cjs');
+const { parseCookies, signSession, verifyOAuthState, decodeOAuthState } = require('./session-utils.cjs');
 
 exports.handler = async (event, context) => {
     const code = event.queryStringParameters && event.queryStringParameters.code;
@@ -6,36 +6,47 @@ exports.handler = async (event, context) => {
 
     const CLIENT_ID = process.env.PATREON_CLIENT_ID;
     const CLIENT_SECRET = process.env.PATREON_CLIENT_SECRET;
-    const REDIRECT_URI = process.env.PATREON_REDIRECT_URI;
 
     // 1. Validar Token Anti-CSRF
-    // Primero validamos la firma criptográfica del estado (inmune a pérdida de cookies en redirecciones)
-    const isStateValid = verifyOAuthState(receivedState);
+    // Decodificar metadata del estado firmado con HMAC
+    const stateData = decodeOAuthState(receivedState);
+    let isStateValid = !!stateData;
 
     if (!isStateValid) {
-        // Fallback: verificar con cookie por compatibilidad
+        // Fallback: verificar con cookie por compatibilidad con navegadores que mantienen cookies
         const cookieHeader = event.headers.cookie || event.headers.Cookie || '';
         const cookies = parseCookies(cookieHeader);
         const expectedState = cookies.mc_oauth_state;
 
-        if (!receivedState || !expectedState || receivedState !== expectedState) {
-            console.error('[Patreon Callback] CSRF validation failed. state:', receivedState, 'cookieState:', expectedState);
-            return {
-                statusCode: 403,
-                body: "Error de seguridad: Estado de autenticación inválido o expirado. Por favor, intenta conectar Patreon nuevamente."
-            };
+        if (receivedState && expectedState && receivedState === expectedState) {
+            isStateValid = true;
         }
+    }
+
+    if (!isStateValid) {
+        console.error('[Patreon Callback] CSRF validation failed. state:', receivedState);
+        return {
+            statusCode: 302,
+            headers: {
+                Location: '/?auth=expired'
+            }
+        };
     }
 
     if (!code) {
         return { 
-            statusCode: 400, 
-            body: `Error: No se recibió código de autorización de Patreon. Parámetros recibidos: ${JSON.stringify(event.queryStringParameters)}` 
+            statusCode: 302, 
+            headers: {
+                Location: '/?auth=error'
+            }
         };
     }
 
     try {
         // 2. Intercambiar el código por un Access Token
+        // Usar exactamente el mismo redirect_uri registrado en el state
+        const tokenRedirectUri = (stateData && stateData.r) || process.env.PATREON_REDIRECT_URI || 'https://wrkzvisualizador.netlify.app/.netlify/functions/patreon-callback';
+
         const tokenResponse = await fetch('https://www.patreon.com/api/oauth2/token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -44,15 +55,20 @@ exports.handler = async (event, context) => {
                 grant_type: 'authorization_code',
                 client_id: CLIENT_ID,
                 client_secret: CLIENT_SECRET,
-                redirect_uri: REDIRECT_URI
+                redirect_uri: tokenRedirectUri
             })
         });
 
         const tokenData = await tokenResponse.json();
 
         if (tokenData.error) {
-            console.error('Error fetching token:', tokenData);
-            return { statusCode: 400, body: "Error autenticando con Patreon: " + tokenData.error };
+            console.error('Error fetching token from Patreon:', tokenData);
+            return {
+                statusCode: 302,
+                headers: {
+                    Location: '/?auth=error'
+                }
+            };
         }
 
         const accessToken = tokenData.access_token;
@@ -103,19 +119,35 @@ exports.handler = async (event, context) => {
         };
         const sessionToken = signSession(sessionPayload);
 
-        // Cookies seguras:
-        // mc_session: HttpOnly, firmada, no manipulable por JavaScript
+        // Cookies seguras
         const sessionCookie = `mc_session=${sessionToken}; Path=/; Max-Age=2592000; SameSite=Lax; HttpOnly;`;
-        // Limpiar cookie temporal de estado OAuth
         const clearStateCookie = `mc_oauth_state=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax;`;
-        // Limpiar cualquier cookie vieja de mc_tier en texto plano
         const clearOldTierCookie = `mc_tier=; Path=/; Max-Age=0;`;
         const clearOldUserCookie = `mc_user=; Path=/; Max-Age=0;`;
+
+        // 5. Determinar la redirección de retorno
+        // Si el usuario comenzó en un dominio distinto (ej. mcvisualizer.wrkz.net pero Patreon devolvió a wrkzvisualizador.netlify.app),
+        // transferimos la sesión al dominio de origen mediante set-session para que la cookie exista en el dominio correcto.
+        const currentHost = (event.headers['x-forwarded-host'] || event.headers.host || '').toLowerCase();
+        const originUrl = (stateData && stateData.o) ? stateData.o : '';
+        let destination = '/?auth=success';
+
+        if (originUrl) {
+            try {
+                const parsedOrigin = new URL(originUrl);
+                const originHost = parsedOrigin.host.toLowerCase();
+                if (originHost && currentHost && originHost !== currentHost) {
+                    destination = `${parsedOrigin.origin}/.netlify/functions/set-session?token=${encodeURIComponent(sessionToken)}&redirect=${encodeURIComponent('/?auth=success')}`;
+                }
+            } catch (err) {
+                console.warn('[Patreon Callback] Error determinando host de destino:', err);
+            }
+        }
 
         return {
             statusCode: 302,
             headers: {
-                Location: '/?auth=success'
+                Location: destination
             },
             multiValueHeaders: {
                 'Set-Cookie': [sessionCookie, clearStateCookie, clearOldTierCookie, clearOldUserCookie]
@@ -124,6 +156,12 @@ exports.handler = async (event, context) => {
 
     } catch (error) {
         console.error('Error en callback:', error);
-        return { statusCode: 500, body: "Error interno del servidor en Netlify." };
+        return {
+            statusCode: 302,
+            headers: {
+                Location: '/?auth=error'
+            }
+        };
     }
 };
+

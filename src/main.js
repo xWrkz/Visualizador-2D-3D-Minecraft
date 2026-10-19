@@ -100,8 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const buildSlug = params.get('build');
         const viewName = params.get('view');
 
-        // Limpiar parámetros de autenticación si existen
-        if (params.get('auth') === 'success') {
+        // Limpiar parámetros de autenticación si existen (success, expired, error)
+        if (params.has('auth')) {
             params.delete('auth');
             const cleanUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
             window.history.replaceState({}, '', cleanUrl);

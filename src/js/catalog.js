@@ -19,11 +19,16 @@ export function renderUserProfile(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    if (window.currentUserTier > 0) {
+    if (window.isAuthenticated) {
+        const isPaid = window.currentUserTier > 0;
+        const tierBadge = isPaid
+            ? `<span class="user-tier">Nivel: ${getTierName(window.currentUserTier)}</span>`
+            : `<span class="user-tier" style="background: rgba(100, 116, 139, 0.25); color: #cbd5e1; border-color: rgba(148, 163, 184, 0.3);">Público (Sin Membresía)</span>`;
+
         container.innerHTML = `
-            <span class="user-tier">Nivel: ${getTierName(window.currentUserTier)}</span>
-            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(window.currentUserName || 'User')}&background=6366f1&color=fff" alt="User">
-            <a href="/.netlify/functions/patreon-logout" title="Cerrar sesión de Patreon" class="logout-btn" style="color: #94a3b8; margin-left: 8px; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; transition: color 0.2s;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color='#94a3b8'">
+            ${tierBadge}
+            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(window.currentUserName || 'User')}&background=6366f1&color=fff" alt="${window.currentUserName || 'User'}" title="${window.currentUserName || 'User'}">
+            <a href="/.netlify/functions/patreon-logout" title="Cerrar sesión (${window.currentUserName || 'Patreon'})" class="logout-btn" style="color: #94a3b8; margin-left: 8px; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; transition: color 0.2s;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color='#94a3b8'">
                 <i class="fa-solid fa-right-from-bracket"></i>
             </a>
         `;

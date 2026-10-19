@@ -74,51 +74,97 @@ function verifySession(token) {
 
 /**
  * Genera un token state firmado criptográficamente para el flujo OAuth.
- * Contiene timestamp y nonce aleatorio firmado con HMAC-SHA256.
- * Esto protege contra CSRF de forma stateless sin depender de cookies de terceros que los navegadores bloquean.
+ * Contiene timestamp, nonce aleatorio y opcionalmente metadata (origen, redirectUri).
+ * Protege contra CSRF de forma stateless.
  */
-function generateOAuthState() {
+function generateOAuthState(metadata = {}) {
     const timestamp = Math.floor(Date.now() / 1000);
     const nonce = crypto.randomBytes(16).toString('hex');
     const secret = getSecret();
-    const payload = `${timestamp}.${nonce}`;
+
+    const dataObj = {
+        ts: timestamp,
+        n: nonce,
+        o: metadata.origin || '',
+        r: metadata.redirectUri || ''
+    };
+    const payload = Buffer.from(JSON.stringify(dataObj)).toString('base64url');
     const signature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
     return `${payload}.${signature}`;
 }
 
 /**
  * Valida un token state devuelto por Patreon en el callback.
+ * Retorna true si es válido y no ha expirado, false de lo contrario.
  */
 function verifyOAuthState(stateStr, maxAgeSeconds = 900) {
-    if (!stateStr || typeof stateStr !== 'string') return false;
+    return decodeOAuthState(stateStr, maxAgeSeconds) !== null;
+}
+
+/**
+ * Decodifica y verifica la firma y expiración de un token state.
+ * Retorna el objeto con metadata o null si es inválido/expirado.
+ */
+function decodeOAuthState(stateStr, maxAgeSeconds = 900) {
+    if (!stateStr || typeof stateStr !== 'string') return null;
     const parts = stateStr.split('.');
-    if (parts.length !== 3) return false;
 
-    const [timestampStr, nonce, signature] = parts;
-    const timestamp = parseInt(timestampStr, 10);
-    if (isNaN(timestamp)) return false;
+    // Formato moderno: payload.signature (2 partes con base64url)
+    if (parts.length === 2) {
+        const [payload, signature] = parts;
+        const secret = getSecret();
+        const expectedSignature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
 
-    // Verificar si expiró (15 minutos)
-    const now = Math.floor(Date.now() / 1000);
-    if (now - timestamp > maxAgeSeconds || timestamp > now + 60) {
-        return false;
-    }
-
-    const secret = getSecret();
-    const payload = `${timestampStr}.${nonce}`;
-    const expectedSignature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
-
-    try {
-        const sigBuf = Buffer.from(signature);
-        const expBuf = Buffer.from(expectedSignature);
-        if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
-            return false;
+        try {
+            const sigBuf = Buffer.from(signature);
+            const expBuf = Buffer.from(expectedSignature);
+            if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
+                return null;
+            }
+        } catch {
+            return null;
         }
-    } catch {
-        return false;
+
+        try {
+            const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+            const now = Math.floor(Date.now() / 1000);
+            if (now - data.ts > maxAgeSeconds || data.ts > now + 60) {
+                return null;
+            }
+            return data;
+        } catch {
+            return null;
+        }
     }
 
-    return true;
+    // Formato legado: timestamp.nonce.signature (3 partes)
+    if (parts.length === 3) {
+        const [timestampStr, nonce, signature] = parts;
+        const timestamp = parseInt(timestampStr, 10);
+        if (isNaN(timestamp)) return null;
+
+        const now = Math.floor(Date.now() / 1000);
+        if (now - timestamp > maxAgeSeconds || timestamp > now + 60) {
+            return null;
+        }
+
+        const secret = getSecret();
+        const payload = `${timestampStr}.${nonce}`;
+        const expectedSignature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
+
+        try {
+            const sigBuf = Buffer.from(signature);
+            const expBuf = Buffer.from(expectedSignature);
+            if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
+                return null;
+            }
+            return { ts: timestamp, n: nonce, o: '', r: '' };
+        } catch {
+            return null;
+        }
+    }
+
+    return null;
 }
 
 function getTierName(tier) {
@@ -134,5 +180,6 @@ module.exports = {
     verifySession,
     generateOAuthState,
     verifyOAuthState,
+    decodeOAuthState,
     getTierName
 };
