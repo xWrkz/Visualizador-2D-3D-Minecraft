@@ -23,6 +23,7 @@ exports.handler = async (event, context) => {
                 authenticated: true,
                 tier: session.tier || 0,
                 user: session.user || 'Usuario',
+                avatar: session.avatar || null,
                 tierName: getTierName(session.tier || 0)
             })
         };
@@ -39,6 +40,7 @@ exports.handler = async (event, context) => {
             authenticated: false,
             tier: 0,
             user: null,
+            avatar: null,
             tierName: 'Público'
         })
     };

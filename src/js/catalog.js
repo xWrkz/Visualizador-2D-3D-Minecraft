@@ -25,9 +25,10 @@ export function renderUserProfile(containerId) {
             ? `<span class="user-tier">Nivel: ${getTierName(window.currentUserTier)}</span>`
             : `<span class="user-tier" style="background: rgba(100, 116, 139, 0.25); color: #cbd5e1; border-color: rgba(148, 163, 184, 0.3);">Público (Sin Membresía)</span>`;
 
+        const avatarUrl = window.currentUserAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(window.currentUserName || 'User')}&background=6366f1&color=fff`;
         container.innerHTML = `
             ${tierBadge}
-            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(window.currentUserName || 'User')}&background=6366f1&color=fff" alt="${window.currentUserName || 'User'}" title="${window.currentUserName || 'User'}">
+            <img src="${avatarUrl}" alt="${window.currentUserName || 'User'}" title="${window.currentUserName || 'User'}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255, 255, 255, 0.25);" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(window.currentUserName || 'User')}&background=6366f1&color=fff'">
             <a href="/.netlify/functions/patreon-logout" title="Cerrar sesión (${window.currentUserName || 'Patreon'})" class="logout-btn" style="color: #94a3b8; margin-left: 8px; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; transition: color 0.2s;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color='#94a3b8'">
                 <i class="fa-solid fa-right-from-bracket"></i>
             </a>

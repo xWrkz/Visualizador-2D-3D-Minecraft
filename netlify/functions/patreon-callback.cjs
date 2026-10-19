@@ -71,10 +71,9 @@ exports.handler = async (event, context) => {
             };
         }
 
-        const accessToken = tokenData.access_token;
-
-        // 3. Consultar la identidad y suscripciones del usuario
-        const identityResponse = await fetch('https://www.patreon.com/api/oauth2/v2/identity?include=memberships.currently_entitled_tiers&fields[tier]=amount_cents,title', {
+        // 3. Consultar la identidad, foto de perfil y suscripciones del usuario
+        const identityUrl = 'https://www.patreon.com/api/oauth2/v2/identity?include=memberships.currently_entitled_tiers&fields[tier]=amount_cents,title&fields[user]=full_name,image_url,thumb_url';
+        const identityResponse = await fetch(identityUrl, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
@@ -84,9 +83,12 @@ exports.handler = async (event, context) => {
         
         let userTier = 0; // 0 = Público / Sin suscripción
         let userName = "Usuario";
+        let userAvatar = null;
 
         if (identityData && identityData.data) {
-            userName = identityData.data.attributes.full_name || "Usuario";
+            const attrs = identityData.data.attributes || {};
+            userName = attrs.full_name || "Usuario";
+            userAvatar = attrs.thumb_url || attrs.image_url || null;
             
             if (identityData.included) {
                 const tiers = identityData.included.filter(item => item.type === 'tier');
@@ -114,6 +116,7 @@ exports.handler = async (event, context) => {
         const sessionPayload = {
             tier: userTier,
             user: userName,
+            avatar: userAvatar,
             iat: Math.floor(Date.now() / 1000),
             exp: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60) // 30 días
         };

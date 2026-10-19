@@ -10,6 +10,7 @@ export function getTierName(tier) {
 // Variables reactivas en window para acceso global
 window.currentUserTier = 0;
 window.currentUserName = null;
+window.currentUserAvatar = null;
 window.currentUserTierName = "Público";
 window.isAuthenticated = false;
 
@@ -33,6 +34,7 @@ export async function checkSession() {
             const data = await response.json();
             window.currentUserTier = data.tier || 0;
             window.currentUserName = data.user || null;
+            window.currentUserAvatar = data.avatar || null;
             window.currentUserTierName = data.tierName || getTierName(data.tier || 0);
             window.isAuthenticated = !!data.authenticated;
 
@@ -49,10 +51,12 @@ export async function checkSession() {
             authenticated: false,
             tier: 0,
             user: null,
+            avatar: null,
             tierName: "Público"
         };
         window.currentUserTier = 0;
         window.currentUserName = null;
+        window.currentUserAvatar = null;
         window.currentUserTierName = "Público";
         window.isAuthenticated = false;
 
