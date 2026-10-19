@@ -2,27 +2,7 @@ import { collections, specificBuilds } from './data.js';
 import { start3DPreview } from './preview.js';
 import { openVisualizer } from './visualizer.js';
 import { UIAudioManager } from './audioManager.js';
-
-// --- Cookie Parsing for Patreon ---
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return null;
-}
-
-const cookieTier = getCookie('mc_tier');
-const cookieUser = getCookie('mc_user');
-
-const currentUserTier = cookieTier !== null ? parseInt(cookieTier) : 0;
-const currentUserName = cookieUser ? decodeURIComponent(cookieUser) : null;
-
-function getTierName(tier) {
-    if (tier === 3) return "Arquitecto";
-    if (tier === 2) return "Maestro";
-    if (tier === 1) return "Básico";
-    return "Público";
-}
+import { getTierName, showPatreonModal } from './auth.js';
 
 // --- DOM Elements for Catalog ---
 const catalogGrid = document.getElementById('catalog-grid');
@@ -34,55 +14,62 @@ const closeModalBtn = document.getElementById('close-modal');
 const premiumBtns = document.querySelectorAll('.premium-btn');
 const requiredTierName = document.getElementById('required-tier-name');
 
-// --- Renderizar Perfil ---
-function renderUserProfile(containerId) {
+// --- Renderizar Perfil Seguro ---
+export function renderUserProfile(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    if (currentUserTier > 0) {
+    if (window.currentUserTier > 0) {
         container.innerHTML = `
-            <span class="user-tier">Nivel: ${getTierName(currentUserTier)}</span>
-            <img src="https://ui-avatars.com/api/?name=${currentUserName || 'User'}&background=6366f1&color=fff" alt="User">
+            <span class="user-tier">Nivel: ${getTierName(window.currentUserTier)}</span>
+            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(window.currentUserName || 'User')}&background=6366f1&color=fff" alt="User">
+            <a href="/.netlify/functions/patreon-logout" title="Cerrar sesión de Patreon" class="logout-btn" style="color: #94a3b8; margin-left: 8px; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; transition: color 0.2s;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color='#94a3b8'">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
         `;
     } else {
         container.innerHTML = `
-            <a href="/.netlify/functions/patreon-login" class="login-btn" style="background-color: #ff424d; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; text-decoration: none; font-weight: bold; font-size: 0.9rem;">
+            <a href="/.netlify/functions/patreon-login" class="login-btn" style="background-color: #ff424d; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem;">
                 <i class="fa-brands fa-patreon"></i> Conectar Patreon
             </a>
         `;
     }
 }
 
+// Escuchar cambios de sesión verificada desde el servidor
+window.addEventListener('session-updated', () => {
+    renderUserProfile('catalog-user-profile');
+    renderUserProfile('visualizer-user-profile');
+    renderUserProfile('landing-auth-container');
+
+    const activeTab = document.querySelector('#collection-tabs .menu-btn.active');
+    if (activeTab) {
+        const colId = parseInt(activeTab.getAttribute('data-collection'));
+        const col = collections.find(c => c.id === colId);
+        if (col) generateCards(colId, col.name);
+    }
+});
+
 // --- Patreon Locking Logic ---
 function initPatreonModals() {
     premiumBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             const requiredTier = parseInt(btn.getAttribute('data-tier') || "3");
-
-            if (currentUserTier < requiredTier) {
-                requiredTierName.textContent = requiredTier === 3 ? "Arquitecto ($9/mes)" : "Maestro ($6/mes)";
-                modal.querySelector('h2').textContent = "Acceso Restringido";
-                modal.querySelector('#modal-message').textContent = "Para acceder a este contenido necesitas mejorar tu nivel en Patreon.";
-                modal.querySelector('.tier-info').style.display = 'flex';
-                modal.querySelector('.patreon-btn').textContent = "Mejorar en Patreon";
-                modal.classList.add('active');
-            } else {
-                modal.querySelector('h2').textContent = "¡Gracias por tu apoyo!";
-                modal.querySelector('#modal-message').textContent = "Los archivos de descarga directa los publico exclusivamente en mis posts de Patreon para los miembros de este nivel. ¡Revisa tu feed para descargarlos!";
-                modal.querySelector('.tier-info').style.display = 'none';
-                modal.querySelector('.patreon-btn').textContent = "Ir a Patreon";
-                modal.classList.add('active');
-            }
+            showPatreonModal(requiredTier);
         });
     });
 
-    closeModalBtn.addEventListener('click', () => {
-        modal.classList.remove('active');
-    });
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+    }
     
-    modal.addEventListener('click', (e) => { 
-        if (e.target === modal) modal.classList.remove('active'); 
-    });
+    if (modal) {
+        modal.addEventListener('click', (e) => { 
+            if (e.target === modal) modal.classList.remove('active'); 
+        });
+    }
 }
 
 // --- Catalog Generation Logic ---
@@ -109,11 +96,16 @@ function generateCards(collectionId, collectionName) {
         const buildTitle = specificData ? specificData.title : `Construcción #${i}`;
         const buildImage = specificData && specificData.imagePath ? `<img src="${specificData.imagePath}" alt="${buildTitle}" style="width:100%; height:100%; object-fit:cover;">` : `<i class="fa-solid fa-cube"></i>`;
 
-        const isFree = i === 1;
-        const freeBadge = isFree ? `<div class="free-badge"><i class="fa-solid fa-unlock"></i> Gratis</div>` : '';
+        const isFree = specificData ? (specificData.isFree !== undefined ? specificData.isFree : (specificData.tier ? specificData.tier === 0 : i === 1)) : (i === 1);
+        const requiredTier = isFree ? 0 : (specificData?.tier || 2);
+        const isLocked = !isFree && window.currentUserTier < requiredTier;
+
+        const badgeHtml = isFree 
+            ? `<div class="free-badge"><i class="fa-solid fa-unlock"></i> Gratis</div>` 
+            : (isLocked ? `<div class="locked-badge" style="position: absolute; top: 10px; right: 10px; background: rgba(15, 23, 42, 0.85); color: #f59e0b; padding: 4px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(245, 158, 11, 0.4); z-index: 10; display: flex; align-items: center; gap: 5px;"><i class="fa-solid fa-lock"></i> Patreon</div>` : '');
 
         const card = document.createElement('div');
-        card.className = 'build-card';
+        card.className = `build-card ${isLocked ? 'build-card-locked' : ''}`;
         card.setAttribute('data-collection', collectionId);
         
         if (specificData && specificData.modelPath && specificData.objFile && specificData.mtlFile) {
@@ -123,7 +115,7 @@ function generateCards(collectionId, collectionName) {
         }
         
         card.innerHTML = `
-            ${freeBadge}
+            ${badgeHtml}
             <div class="card-image" style="position: relative;">
                 ${buildImage}
             </div>
@@ -138,6 +130,11 @@ function generateCards(collectionId, collectionName) {
         
         let previewInstance = null;
         card.addEventListener('mouseenter', () => {
+            // Protección de seguridad: NO descargar ni previsualizar el modelo 3D en hover si está bloqueado
+            if (!isFree && window.currentUserTier < requiredTier) {
+                return;
+            }
+
             const mPath = card.getAttribute('data-model-path');
             const oFile = card.getAttribute('data-obj-file');
             const mFile = card.getAttribute('data-mtl-file');
@@ -164,7 +161,6 @@ function generateCards(collectionId, collectionName) {
             }
         });
 
-
         const infoBtn = card.querySelector('.info-btn');
         if (infoBtn) {
             infoBtn.addEventListener('click', (e) => {
@@ -180,9 +176,8 @@ function generateCards(collectionId, collectionName) {
         }
 
         card.addEventListener('click', () => {
-            if (i > 1 && currentUserTier < 2) {
-                requiredTierName.textContent = "Maestro ($6/mes)";
-                modal.classList.add('active');
+            if (!isFree && window.currentUserTier < requiredTier) {
+                showPatreonModal(requiredTier);
             } else {
                 if (typeof UIAudioManager !== 'undefined') {
                     const st = specificData ? specificData.soundType : '';

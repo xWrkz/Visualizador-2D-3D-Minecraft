@@ -1,6 +1,6 @@
 # Wavefront OBJ file made by Mineways version 13.00, http://mineways.com
 # World: Rana
-# Terrain file name: C:\Users\marco\Downloads\mineways\mineways\terrainExt.png
+# Terrain file name: [REDACTED_LOCAL_PATH]
 # Culling scheme: Standard
 # Tue Sep  1 05:07:21 2026
 
@@ -47,15 +47,15 @@
 #   Debug: show separate parts as colors: no
 #   Debug: show weld blocks in bright colors: no
 
-# Full world path: C:\Users\marco\AppData\Roaming\.minecraft\.minecraft-26.2\saves\Rana
-# Full terrainExt.png path: C:\Users\marco\Downloads\mineways\mineways\terrainExt.png
-# Full current path: C:\Users\marco\Downloads\mineways\mineways
+# Full world path: [REDACTED_LOCAL_PATH]
+# Full terrainExt.png path: [REDACTED_LOCAL_PATH]
+# Full current path: [REDACTED_LOCAL_PATH]
 
 # COMMON_MC_OBJ_START
 # version: 1
 # exporter: mineways
 # world_name: Rana
-# world_path: C:\Users\marco\AppData\Roaming\.minecraft\.minecraft-26.2\saves\Rana
+# world_path: [REDACTED_LOCAL_PATH]
 # export_bounds_min: (-5, -60, -6)
 # export_bounds_max: (16, 319, 14)
 # export_offset: (-6.000000, 60.000000, -4.000000)

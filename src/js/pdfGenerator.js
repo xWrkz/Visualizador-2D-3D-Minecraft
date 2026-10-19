@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { jsPDF } from "jspdf";
 import { switchTo3DMode } from "./visualizer.js";
 import { translateBlockName } from './data.js';
+import { showPatreonModal } from './auth.js';
 
 // --- Helper para texturas numéricas ---
 function createTextSprite(text) {
@@ -946,29 +947,78 @@ export async function generateInventoryPDF() {
     pdf.save(`Materiales_${saveTitle}.pdf`);
 }
 
-// --- Keydown Events ---
-document.addEventListener('keydown', (e) => {
+// --- Keydown Events (Protegidos con Ctrl / Cmd y Confirmación) ---
+document.addEventListener('keydown', async (e) => {
     if (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'textarea') return;
 
     const viewVisualizer = document.getElementById('view-visualizer');
-    if (!viewVisualizer.classList.contains('active')) return;
-    
-    if (e.key.toLowerCase() === 'p') {
-        console.log("Generando Guía PDF 2D...");
-        generatePDF();
-    }
-    
-    if (e.key.toLowerCase() === 'o') {
-        console.log("Generando Guía PDF 3D...");
-        generate3DPDF();
+    if (!viewVisualizer || !viewVisualizer.classList.contains('active')) return;
+
+    // Solo activar si se presiona Ctrl (o Cmd en macOS)
+    const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+    if (!isCtrlOrCmd) return;
+
+    const key = e.key.toLowerCase();
+    if (key !== 'p' && key !== 'o' && key !== 'i') return;
+
+    // Prevenir atajos nativos del navegador (Ctrl+P = Imprimir, Ctrl+O = Abrir archivo)
+    e.preventDefault();
+
+    // Evitar ejecuciones simultáneas mientras se genera un PDF
+    if (window.isGeneratingPDF) {
+        console.warn("Ya hay una generación de PDF en curso. Por favor, espera...");
+        return;
     }
 
-    if (e.key.toLowerCase() === 'i') {
+    // Verificar si la construcción actual requiere nivel de Patreon
+    const currentBuild = window.currentBuildData;
+    if (currentBuild && currentBuild.data) {
+        const isFree = currentBuild.data.isFree !== undefined ? currentBuild.data.isFree : (currentBuild.data.tier ? currentBuild.data.tier === 0 : currentBuild.data.id === 1);
+        const reqTier = isFree ? 0 : (currentBuild.data?.tier || 2);
+        if (!isFree && window.currentUserTier < reqTier) {
+            showPatreonModal(reqTier);
+            return;
+        }
+    }
+
+    if (key === 'p') {
+        const confirmExport = confirm("¿Deseas generar y descargar la Guía PDF 2D (Capas)?\n\nEste proceso puede tomar unos segundos.");
+        if (!confirmExport) return;
+
+        window.isGeneratingPDF = true;
+        console.log("Generando Guía PDF 2D...");
+        try {
+            await generatePDF();
+        } catch (error) {
+            console.error("Error al generar PDF 2D:", error);
+        } finally {
+            window.isGeneratingPDF = false;
+        }
+    } else if (key === 'o') {
+        const confirmExport = confirm("¿Deseas generar y descargar la Guía PDF 3D (Vistas)?\n\nEste proceso puede tomar unos segundos.");
+        if (!confirmExport) return;
+
+        window.isGeneratingPDF = true;
+        console.log("Generando Guía PDF 3D...");
+        try {
+            await generate3DPDF();
+        } catch (error) {
+            console.error("Error al generar PDF 3D:", error);
+        } finally {
+            window.isGeneratingPDF = false;
+        }
+    } else if (key === 'i') {
+        const confirmExport = confirm("¿Deseas generar y descargar el PDF de Lista de Materiales?");
+        if (!confirmExport) return;
+
+        window.isGeneratingPDF = true;
         console.log("Generando PDF de Materiales...");
         try {
-            generateInventoryPDF();
+            await generateInventoryPDF();
         } catch (error) {
             console.error("Error crítico al generar PDF de inventario:", error);
+        } finally {
+            window.isGeneratingPDF = false;
         }
     }
 });

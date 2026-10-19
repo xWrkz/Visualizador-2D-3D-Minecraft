@@ -1,3 +1,9 @@
 node_modules/
 dist/
 temp.txt
+.env
+.env.*
+.env.local
+scripts/test_security.cjs
+scripts/sanitize_models.cjs
+

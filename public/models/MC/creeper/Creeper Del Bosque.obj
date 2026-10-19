@@ -1,6 +1,6 @@
 # Wavefront OBJ file made by Mineways version 13.00, http://mineways.com
 # World: Mundo nuevo (1)
-# Terrain file name: C:\Users\marco\Downloads\mineways\mineways\terrainExt.png
+# Terrain file name: [REDACTED_LOCAL_PATH]
 # Culling scheme: Standard
 # Tue Aug 25 13:51:16 2026
 
@@ -47,15 +47,15 @@
 #   Debug: show separate parts as colors: no
 #   Debug: show weld blocks in bright colors: no
 
-# Full world path: C:\Users\marco\AppData\Roaming\.minecraft\.minecraft-26.2\saves\Mundo nuevo (1)
-# Full terrainExt.png path: C:\Users\marco\Downloads\mineways\mineways\terrainExt.png
-# Full current path: C:\Users\marco\Downloads\mineways\mineways
+# Full world path: [REDACTED_LOCAL_PATH]
+# Full terrainExt.png path: [REDACTED_LOCAL_PATH]
+# Full current path: [REDACTED_LOCAL_PATH]
 
 # COMMON_MC_OBJ_START
 # version: 1
 # exporter: mineways
 # world_name: Mundo nuevo (1)
-# world_path: C:\Users\marco\AppData\Roaming\.minecraft\.minecraft-26.2\saves\Mundo nuevo (1)
+# world_path: [REDACTED_LOCAL_PATH]
 # export_bounds_min: (27, -60, 32)
 # export_bounds_max: (35, 319, 36)
 # export_offset: (-31.000000, 60.000000, -34.000000)

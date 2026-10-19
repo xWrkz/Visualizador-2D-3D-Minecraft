@@ -1,3 +1,60 @@
 [build]
   command = "npm run build"
   publish = "dist"
+
+[functions]
+  included_files = ["public/models/**"]
+
+# -------------------------------------------------------------
+# Cabeceras de Seguridad HTTP Globales
+# -------------------------------------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# -------------------------------------------------------------
+# Redirecciones seguras para modelos 3D protegidos de Patreon
+# (force = true asegura que Netlify intercepte incluso si el archivo
+# existe estáticamente en dist, forzando la validación del tier)
+# -------------------------------------------------------------
+
+[[redirects]]
+  from = "/models/MCAL/*"
+  to = "/.netlify/functions/get-model?path=MCAL/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/models/MCA/*"
+  to = "/.netlify/functions/get-model?path=MCA/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/models/MCI/*"
+  to = "/.netlify/functions/get-model?path=MCI/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/models/MCM/*"
+  to = "/.netlify/functions/get-model?path=MCM/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/models/MIE/*"
+  to = "/.netlify/functions/get-model?path=MIE/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/models/MCDUI/*"
+  to = "/.netlify/functions/get-model?path=MCDUI/:splat"
+  status = 200
+  force = true

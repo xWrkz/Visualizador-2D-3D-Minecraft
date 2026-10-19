@@ -1,20 +1,34 @@
+const { parseCookies, signSession } = require('./session-utils.cjs');
+
 exports.handler = async (event, context) => {
-    const code = event.queryStringParameters.code;
+    const code = event.queryStringParameters && event.queryStringParameters.code;
+    const receivedState = event.queryStringParameters && event.queryStringParameters.state;
 
     const CLIENT_ID = process.env.PATREON_CLIENT_ID;
     const CLIENT_SECRET = process.env.PATREON_CLIENT_SECRET;
     const REDIRECT_URI = process.env.PATREON_REDIRECT_URI;
 
+    // 1. Validar Token Anti-CSRF
+    const cookieHeader = event.headers.cookie || event.headers.Cookie || '';
+    const cookies = parseCookies(cookieHeader);
+    const expectedState = cookies.mc_oauth_state;
+
+    if (!receivedState || !expectedState || receivedState !== expectedState) {
+        return {
+            statusCode: 403,
+            body: "Error de seguridad: Estado de autenticación inválido o expirado. Por favor, intenta conectar Patreon nuevamente."
+        };
+    }
+
     if (!code) {
         return { 
             statusCode: 400, 
-            body: `Error: No se recibió código de autorización de Patreon. Parametros recibidos: ${JSON.stringify(event.queryStringParameters)}` 
+            body: `Error: No se recibió código de autorización de Patreon. Parámetros recibidos: ${JSON.stringify(event.queryStringParameters)}` 
         };
     }
 
     try {
-        // 1. Intercambiar el código por un Access Token
-        // Usamos la API fetch global que Netlify (Node 18+) soporta por defecto
+        // 2. Intercambiar el código por un Access Token
         const tokenResponse = await fetch('https://www.patreon.com/api/oauth2/token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -36,7 +50,7 @@ exports.handler = async (event, context) => {
 
         const accessToken = tokenData.access_token;
 
-        // 2. Consultar la identidad y suscripciones del usuario
+        // 3. Consultar la identidad y suscripciones del usuario
         const identityResponse = await fetch('https://www.patreon.com/api/oauth2/v2/identity?include=memberships.currently_entitled_tiers&fields[tier]=amount_cents,title', {
             headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -73,22 +87,36 @@ exports.handler = async (event, context) => {
             }
         }
 
-        // 3. Crear una Cookie de sesión y redirigir al catálogo
-        const cookieStr = `mc_tier=${userTier}; Path=/; Max-Age=2592000; SameSite=Lax;`;
-        const nameCookieStr = `mc_user=${encodeURIComponent(userName)}; Path=/; Max-Age=2592000; SameSite=Lax;`;
+        // 4. Crear un token de sesión criptográficamente firmado (HMAC-SHA256)
+        const sessionPayload = {
+            tier: userTier,
+            user: userName,
+            iat: Math.floor(Date.now() / 1000),
+            exp: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60) // 30 días
+        };
+        const sessionToken = signSession(sessionPayload);
+
+        // Cookies seguras:
+        // mc_session: HttpOnly, firmada, no manipulable por JavaScript
+        const sessionCookie = `mc_session=${sessionToken}; Path=/; Max-Age=2592000; SameSite=Lax; HttpOnly;`;
+        // Limpiar cookie temporal de estado OAuth
+        const clearStateCookie = `mc_oauth_state=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax;`;
+        // Limpiar cualquier cookie vieja de mc_tier en texto plano
+        const clearOldTierCookie = `mc_tier=; Path=/; Max-Age=0;`;
+        const clearOldUserCookie = `mc_user=; Path=/; Max-Age=0;`;
 
         return {
             statusCode: 302,
             headers: {
-                Location: '/'
+                Location: '/?auth=success'
             },
             multiValueHeaders: {
-                'Set-Cookie': [cookieStr, nameCookieStr]
+                'Set-Cookie': [sessionCookie, clearStateCookie, clearOldTierCookie, clearOldUserCookie]
             }
         };
 
     } catch (error) {
-        console.error(error);
+        console.error('Error en callback:', error);
         return { statusCode: 500, body: "Error interno del servidor en Netlify." };
     }
 };

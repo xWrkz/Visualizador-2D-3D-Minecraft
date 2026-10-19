@@ -6,6 +6,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { translateBlockName, getSlug } from './data.js';
+import { showPatreonModal } from './auth.js';
 
 // --- View Navigation and DOM Elements ---
 const viewCatalog = document.getElementById('view-catalog');
@@ -20,6 +21,15 @@ const canvas2D = document.getElementById('canvas-2d');
 const panelCrafting = document.getElementById('panel-crafting');
 
 export function openVisualizer(build, fromHistory = false) {
+    // Protección de seguridad adicional: validar tier antes de renderizar
+    const isFree = build.data ? (build.data.isFree !== undefined ? build.data.isFree : (build.data.tier ? build.data.tier === 0 : build.data.id === 1)) : (build.id === 1);
+    const reqTier = isFree ? 0 : (build.data?.tier || 2);
+
+    if (!isFree && window.currentUserTier < reqTier) {
+        showPatreonModal(reqTier);
+        return;
+    }
+
     window.currentBuildData = build;
     visualizerTitle.textContent = build.title;
     viewCatalog.classList.remove('active');

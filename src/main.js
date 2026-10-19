@@ -6,6 +6,7 @@ import { initCatalog } from './js/catalog.js';
 import { init3D, switchTo3DMode, openVisualizer } from './js/visualizer.js';
 import { getBuildBySlug } from './js/data.js';
 import { UIAudioManager } from './js/audioManager.js';
+import { authReadyPromise, showPatreonModal } from './js/auth.js';
 import './js/preview.js';
 import './js/pdfGenerator.js';
 import './js/skyboxManager.js';
@@ -85,8 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 5. Browser Back Button Support (History API)
-    function handleHistoryChange() {
+    // 5. Browser Back Button Support (History API) y Enrutamiento Seguro
+    async function handleHistoryChange() {
+        // Esperar a que la autenticación del backend esté resuelta
+        await authReadyPromise;
+
         // Close any open sidebars or overlays
         document.querySelectorAll('.sidebar.open').forEach(sb => sb.classList.remove('open'));
         document.querySelectorAll('.mobile-overlay.active').forEach(ov => ov.classList.remove('active'));
@@ -96,9 +100,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const buildSlug = params.get('build');
         const viewName = params.get('view');
 
+        // Limpiar parámetros de autenticación si existen
+        if (params.get('auth') === 'success') {
+            params.delete('auth');
+            const cleanUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+            window.history.replaceState({}, '', cleanUrl);
+        }
+
         if (buildSlug) {
             const build = getBuildBySlug(buildSlug);
             if (build) {
+                // Validación de seguridad para URL directa: Comprobar tier requerido
+                const isFree = build.data ? (build.data.isFree !== undefined ? build.data.isFree : (build.data.tier ? build.data.tier === 0 : build.data.id === 1)) : (build.id === 1);
+                const reqTier = isFree ? 0 : (build.data?.tier || 2);
+
+                if (!isFree && window.currentUserTier < reqTier) {
+                    // Bloqueo de seguridad: No abrir visualizador si no tiene la suscripción requerida
+                    document.getElementById('view-landing').classList.remove('active');
+                    document.getElementById('view-visualizer').classList.remove('active');
+                    document.getElementById('view-catalog').classList.add('active');
+                    
+                    window.history.replaceState({ view: 'catalog' }, '', window.location.pathname + '?view=catalog');
+                    showPatreonModal(reqTier);
+                    return;
+                }
+
                 // Prevent duplicate history entries if openVisualizer is called manually
                 openVisualizer(build, true);
                 return;
