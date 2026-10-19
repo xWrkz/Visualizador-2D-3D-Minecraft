@@ -71,6 +71,8 @@ exports.handler = async (event, context) => {
             };
         }
 
+        const accessToken = tokenData.access_token;
+
         // 3. Consultar la identidad, foto de perfil y suscripciones del usuario
         const identityUrl = 'https://www.patreon.com/api/oauth2/v2/identity?include=memberships.currently_entitled_tiers&fields[tier]=amount_cents,title&fields[user]=full_name,image_url,thumb_url';
         const identityResponse = await fetch(identityUrl, {
