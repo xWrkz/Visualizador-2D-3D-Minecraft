@@ -22,9 +22,25 @@ exports.handler = async (event, context) => {
     const cleanPath = path.normalize(rawPath).replace(/^(\.\.[\/\\])+/, '');
     const normalizedSlashPath = cleanPath.replace(/\\/g, '/');
 
-    // 2. Comprobar si es un archivo de texturas públicas (models/text/*) o modelos gratuitos (MC/*)
-    const isFreeModel = normalizedSlashPath.startsWith('MC/') || normalizedSlashPath.startsWith('models/MC/');
-    const isTexture = normalizedSlashPath.startsWith('text/') || normalizedSlashPath.startsWith('models/text/');
+    // 2. Comprobar si es un archivo de texturas públicas o uno de los modelos gratuitos
+    const lowerPath = normalizedSlashPath.toLowerCase().replace(/^models\//, '');
+    
+    // Lista de modelos gratuitos (Nivel 0 / Público)
+    const freeModelPrefixes = [
+        'mc/creeper',
+        'mcal/estatua-rana',
+        'mci/estatua-unicornio',
+        'mcm/espejo-magico'
+    ];
+
+    const freeTexturePrefixes = [
+        'text/',
+        'block/',
+        'items/'
+    ];
+
+    const isFreeModel = freeModelPrefixes.some(prefix => lowerPath.startsWith(prefix));
+    const isTexture = freeTexturePrefixes.some(prefix => lowerPath.startsWith(prefix));
 
     if (!isFreeModel && !isTexture) {
         // 3. Modelo Premium: Validar sesión criptográfica y nivel de Patreon
