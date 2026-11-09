@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { resolve } from 'path';
 
 export default defineConfig({
   root: './',
@@ -86,5 +87,16 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        help: resolve(__dirname, 'help.html'),
+        support: resolve(__dirname, 'support.html'),
+        terms: resolve(__dirname, 'legal/terms.html'),
+        privacy: resolve(__dirname, 'legal/privacy.html'),
+        cookies: resolve(__dirname, 'legal/cookies.html'),
+        rules: resolve(__dirname, 'legal/rules.html'),
+      }
+    }
   }
 });

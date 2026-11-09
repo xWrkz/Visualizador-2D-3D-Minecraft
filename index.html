@@ -4,7 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wrkz Visualizer </title>
+    <title>Wrkz Visualizer | Construcciones y Planos 3D para Minecraft</title>
+    <meta name="description" content="Visualizador 3D y 2D capa por capa de construcciones para Minecraft. Explora planos interactivos, listas de materiales exactas y guías de crafteo de las colecciones oficiales de Wrkz.">
+    <meta name="keywords" content="Minecraft, visualizador Minecraft, construcciones Minecraft, planos Minecraft, esquemas Minecraft 3D, crafteos Minecraft, Wrkz, Wrkz Colecciones, planos capa por capa">
+    <meta name="author" content="Wrkz">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://mcvisualizer.wrkz.net/">
+
+    <!-- Open Graph / Redes Sociales -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Wrkz Visualizer | Construcciones y Planos 3D para Minecraft">
+    <meta property="og:description" content="Explora e inspecciona construcciones de Minecraft en 3D y 2D capa por capa con lista de materiales y árbol de crafteo.">
+    <meta property="og:url" content="https://mcvisualizer.wrkz.net/">
+    <meta property="og:image" content="https://mcvisualizer.wrkz.net/portadas/LOGOMC.png">
+    <meta property="og:site_name" content="Wrkz MC Visualizador">
+    <meta property="og:locale" content="es_ES">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Wrkz Visualizer | Construcciones y Planos 3D para Minecraft">
+    <meta name="twitter:description" content="Explora e inspecciona construcciones de Minecraft en 3D y 2D capa por capa con lista de materiales y árbol de crafteo.">
+    <meta name="twitter:image" content="https://mcvisualizer.wrkz.net/portadas/LOGOMC.png">
+
+    <!-- Schema.org Datos Estructurados JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Wrkz Visualizer",
+      "url": "https://mcvisualizer.wrkz.net/",
+      "description": "Visualizador 3D y 2D interactivo para construcciones de Minecraft con lista de materiales paso a paso.",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "All",
+      "inLanguage": "es",
+      "author": {
+        "@type": "Person",
+        "name": "Wrkz",
+        "url": "https://www.youtube.com/@xWrkzMC"
+      }
+    }
+    </script>
+
     <!-- CSS importado vía Vite en src/main.js -->
     <link rel="icon" type="image/png" href="portadas/LOGOMC.png">
     <!-- FontAwesome para iconos -->
@@ -131,7 +171,77 @@
                     <p>Explora las construcciones oficiales de cada libro</p>
                 </div>
                 <div class="books-grid" id="landing-books-grid">
-                    <!-- Books are injected dynamically from data.js -->
+                    <!-- Pre-renderizado para indexación y SEO inicial -->
+                    <div class="book-card" data-collection-target="1">
+                        <div class="book-cover">
+                            <img src="portadas/MC.jpg" alt="Mini-Construcciones" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="book-info">
+                            <h3>Mini-Construcciones</h3>
+                            <p>Proyectos compactos e increíbles para tu mundo de supervivencia.</p>
+                            <div class="book-action">Ver colección <i class="fa-solid fa-arrow-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="book-card" data-collection-target="2">
+                        <div class="book-cover">
+                            <img src="portadas/MCAL.png" alt="Mini-Construcciones Alucinantes" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="book-info">
+                            <h3>Mini-Construcciones Alucinantes</h3>
+                            <p>Más de 20 increíbles proyectos que llevarán tu creatividad al límite.</p>
+                            <div class="book-action">Ver colección <i class="fa-solid fa-arrow-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="book-card" data-collection-target="3">
+                        <div class="book-cover">
+                            <img src="portadas/MCA.jpg" alt="Mini-Construcciones Asombrosas" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="book-info">
+                            <h3>Mini-Construcciones Asombrosas</h3>
+                            <p>Descubre nuevas y asombrosas estructuras paso a paso.</p>
+                            <div class="book-action">Ver colección <i class="fa-solid fa-arrow-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="book-card" data-collection-target="4">
+                        <div class="book-cover">
+                            <img src="portadas/MCI.jpg" alt="Mini-Construcciones Increibles" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="book-info">
+                            <h3>Mini-Construcciones Increibles</h3>
+                            <p>Estructuras que desafían la imaginación para constructores expertos.</p>
+                            <div class="book-action">Ver colección <i class="fa-solid fa-arrow-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="book-card" data-collection-target="5">
+                        <div class="book-cover">
+                            <img src="portadas/MCM.png" alt="Mini-Construcciones Mágicas" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="book-info">
+                            <h3>Mini-Construcciones Mágicas</h3>
+                            <p>Añade un toque de magia y misterio a cada rincón de tu mundo.</p>
+                            <div class="book-action">Ver colección <i class="fa-solid fa-arrow-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="book-card" data-collection-target="6">
+                        <div class="book-cover">
+                            <img src="portadas/MIE.jpg" alt="Minecraft Inventos Epicos" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="book-info">
+                            <h3>Minecraft Inventos Epicos</h3>
+                            <p>Más de 20 proyectos que despertarán tu imaginación.</p>
+                            <div class="book-action">Ver colección <i class="fa-solid fa-arrow-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="book-card" data-collection-target="7">
+                        <div class="book-cover">
+                            <img src="portadas/MCDUI.png" alt="Minecraft Cada Dia Una Idea" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="book-info">
+                            <h3>Minecraft Cada Dia Una Idea</h3>
+                            <p>Con 150 proyectos increíbles para construir.</p>
+                            <div class="book-action">Ver colección <i class="fa-solid fa-arrow-right"></i></div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
